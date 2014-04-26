@@ -12,7 +12,6 @@ public class bf4stats : MonoBehaviour
     private string leaderboardURI = "http://bf4stats.com/leaderboards/pc_player_score?start=";
 	private string playerInfoURI = "http://api.bf4stats.com/api/playerInfo?plat=pc&name=";
 
-	private string currentPlayerInfo = "";
 	private PlayerData currentPlayerData = null;
 
 	private Vector2 namesScrollView;
@@ -60,7 +59,6 @@ public class bf4stats : MonoBehaviour
 		using (WWW www = new WWW(playerInfoURI + name + outputFormat) )
 		{
 			yield return www;
-			currentPlayerInfo = www.text;
 
 			JsonSerializerSettings settings = new JsonSerializerSettings();
 			settings.NullValueHandling = NullValueHandling.Ignore;
@@ -91,7 +89,6 @@ public class bf4stats : MonoBehaviour
 		GUILayout.EndVertical();
 
 		playerInfoScrollView = GUILayout.BeginScrollView(playerInfoScrollView);
-		//GUILayout.Label(currentPlayerInfo);
 
 		if( currentPlayerData != null )
 		{
