@@ -7,7 +7,30 @@ using Newtonsoft.Json;
 public class bf4stats : MonoBehaviour 
 {
     public int numberOfPages = 1;
-	private List<string> names = new List<string>(); 
+
+	// include the following data
+	public bool imagePaths = true;
+	public bool details = true;
+	public bool names = true;
+	public bool progress = true;
+	public bool extra = true;
+	public bool stats = true;
+	public bool weapons = true;
+	public bool weaponUnlocks = true;
+	public bool weaponCategory = true;
+	public bool vehicles = true;
+	public bool vehicleCategory = true;
+	public bool vehicleUnlocks = true;	
+	public bool kititems = true;		
+	public bool awards = true;	
+	public bool dogtags = true;		
+	public bool assignments = true;		
+	public bool upcomingUnlocks = true;
+	public bool urls = true;
+				
+
+
+	private List<string> playerNames = new List<string>(); 
 
     private string leaderboardURI = "http://bf4stats.com/leaderboards/pc_player_score?start=";
 	private string playerInfoURI = "http://api.bf4stats.com/api/playerInfo?plat=pc&name=";
@@ -43,20 +66,42 @@ public class bf4stats : MonoBehaviour
 					// getting to the end of name
 					int endIndex = www.text.IndexOf(nameLineEnd, startIndex);
 					// extracting the name
-					names.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
+					playerNames.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
             	}
         }
 
-		print ("" + names.Count + " names crawled in: " + Time.time + " seconds.");
+		print ("" + playerNames.Count + " names crawled in: " + Time.time + " seconds.");
     }
 
 	IEnumerator RetrivePlayerInfo(string name)
 	{
 		string outputFormat = "&output=js";
 
+		string optParams = "&opt=";
+
+		if(imagePaths) optParams+= "imagePaths,";
+		if(details) optParams+= "details,";
+		if(names) optParams+= "names,";
+		if(progress) optParams+= "progress,";
+		if(extra) optParams+= "extra,";
+		if(stats) optParams+= "stats,";
+		if(weapons) optParams+= "weapons,";
+		if(weaponUnlocks) optParams+= "weaponUnlocks,";
+		if(weaponCategory) optParams+= "weaponCategory,";
+		if(vehicles) optParams+= "vehicles,";
+		if(vehicleCategory) optParams+= "vehicleCategory,";
+		if(vehicleUnlocks) optParams+= "vehicleUnlocks,";
+		if(kititems) optParams+= "kititems,";
+		if(awards) optParams+= "award,";
+		if(dogtags) optParams+= "dogtags,";
+		if(assignments) optParams+= "assignments,";
+		if(upcomingUnlocks) optParams+= "upcomingUnlocks,";
+		if(urls) optParams+= "urls,";
+
+
 		print ("Retriving player info on " + name + "...");
 
-		using (WWW www = new WWW(playerInfoURI + name + outputFormat) )
+		using (WWW www = new WWW(playerInfoURI + name + outputFormat + optParams.Substring(0, optParams.Length-1) ) )
 		{
 			yield return www;
 
@@ -77,7 +122,7 @@ public class bf4stats : MonoBehaviour
 		GUILayout.BeginVertical();
 
 		namesScrollView = GUILayout.BeginScrollView(namesScrollView);
-		foreach(string name in names )
+		foreach(string name in playerNames )
 		{
 			if( GUILayout.Button(name) )
 			{

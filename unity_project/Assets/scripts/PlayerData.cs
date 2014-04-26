@@ -228,7 +228,7 @@ public class PlayerData
 				public float statRange;
 				public string range;
 				public string rateOfFire;
-				//altAmmoName: null,
+				public string altAmmoName;
 				public string ammoType;
 				public float statAccuracy;
 				public string ammo;
@@ -250,7 +250,7 @@ public class PlayerData
 			public WeaponData weaponData;
 			public string code;
 			public string[] kits;
-			//unlockLicense: null
+			public string unlockLicense;
 			public Unlock unlock;
 		}
 	
@@ -282,7 +282,7 @@ public class PlayerData
 			public string image;
 			public string type;
 			public int needed;
-			//license: null
+			public string license;
 		}
 	
 		public Stat stat;
@@ -421,7 +421,7 @@ public class PlayerData
 			public string image;
 			public string type;
 			public int needed;
-			//license: null },
+			public string license;
 		}
 
 		public class Extra
