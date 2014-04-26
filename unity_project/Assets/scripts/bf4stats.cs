@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+using Newtonsoft.Json;
+
 public class bf4stats : MonoBehaviour 
 {
     public int numberOfPages = 1;
@@ -11,6 +13,7 @@ public class bf4stats : MonoBehaviour
 	private string playerInfoURI = "http://api.bf4stats.com/api/playerInfo?plat=pc&name=";
 
 	private string currentPlayerInfo = "";
+	private PlayerData currentPlayerData = null;
 
 	private Vector2 namesScrollView;
 	private Vector2 playerInfoScrollView;
@@ -58,7 +61,15 @@ public class bf4stats : MonoBehaviour
 		{
 			yield return www;
 			currentPlayerInfo = www.text;
+
+			JsonSerializerSettings settings = new JsonSerializerSettings();
+			settings.NullValueHandling = NullValueHandling.Ignore;
+
+			// substring to ignore "var pd=" line and ";" in the end
+			currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(www.text.Substring(7, www.text.Length - 8), settings);
+
 		}
+		print ("Done.");
 	}
 
 	void OnGUI()
@@ -80,7 +91,14 @@ public class bf4stats : MonoBehaviour
 		GUILayout.EndVertical();
 
 		playerInfoScrollView = GUILayout.BeginScrollView(playerInfoScrollView);
-		GUILayout.Label(currentPlayerInfo);
+		//GUILayout.Label(currentPlayerInfo);
+
+		if( currentPlayerData != null )
+		{
+			GUILayout.Label("Name: " + currentPlayerData.player.name);
+			GUILayout.Label("Country: " + currentPlayerData.player.countryName);
+			GUILayout.Label("Score: " + currentPlayerData.player.score);
+		}
 		GUILayout.EndScrollView();
 
 		GUILayout.EndHorizontal();
