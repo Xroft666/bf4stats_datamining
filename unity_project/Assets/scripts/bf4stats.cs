@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 using Newtonsoft.Json;
 
@@ -39,6 +41,8 @@ public class bf4stats : MonoBehaviour
 
 	private Vector2 namesScrollView;
 	private Vector2 playerInfoScrollView;
+	
+	private string output = "";
 
 	IEnumerator Start()
 	{
@@ -111,6 +115,17 @@ public class bf4stats : MonoBehaviour
 			// substring to ignore "var pd=" line and ";" in the end
 			currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(www.text.Substring(7, www.text.Length - 8), settings);
 
+
+			Type objectType = currentPlayerData.GetType();
+
+			MethodInfo genericRetriveMethod = GetType().GetMethod("RetriveFieldsAndValues").MakeGenericMethod(objectType);
+			//genericRetriveMethod.Invoke(this, new object[] { "PlayerInfo", currentPlayerData, 0});
+
+
+			// Be aware of data capacity.
+			// It might not get into because size
+			output = www.text;
+
 		}
 		print ("Done.");
 	}
@@ -137,12 +152,55 @@ public class bf4stats : MonoBehaviour
 
 		if( currentPlayerData != null )
 		{
-			GUILayout.Label("Name: " + currentPlayerData.player.name);
-			GUILayout.Label("Country: " + currentPlayerData.player.countryName);
-			GUILayout.Label("Score: " + currentPlayerData.player.score);
+			GUILayout.Label(output);
 		}
 		GUILayout.EndScrollView();
 
 		GUILayout.EndHorizontal();
+	}
+
+	// Reflection method
+	// I made this awesome method just for nothing. It was too late when i realized that.
+	// Moreover its not just useless because original JSON is the same,
+	// but also if u try to retrive the full data, the recursion will freeze unity for a while
+	public void RetriveFieldsAndValues<ReflectionType>( string fieldName, ReflectionType reflectionObject, int depth )
+	{
+		int localDepth = depth;
+		
+		if( typeof(ReflectionType).Namespace == "System" )
+		{
+			//output.Add( new string(' ', localDepth * 5) + fieldName + ": " + reflectionObject );
+			output += new string(' ', localDepth * 5) + fieldName + ": " + reflectionObject + "\n";
+			return;
+		}
+		
+		if( typeof(ReflectionType).IsArray )
+		{
+			//output.Add( new string(' ', localDepth * 5) + fieldName + ": [");
+			output += new string(' ', localDepth * 5) + fieldName + ": [\n";
+
+			Type itemType = typeof(ReflectionType).GetElementType();
+			foreach(object item in (reflectionObject as object[]))
+			{
+				MethodInfo genericRetriveMethod = GetType().GetMethod("RetriveFieldsAndValues").MakeGenericMethod(itemType);
+				genericRetriveMethod.Invoke(this, new object[] { "", item, localDepth + 1});
+			}
+			
+			//output.Add( new string(' ', localDepth * 5) + "]");
+			output += new string(' ', localDepth * 5) + "]\n";
+			return;
+		}
+		
+		//output.Add( new string(' ', localDepth * 5) + fieldName + ": ");
+		output += new string(' ', localDepth * 5) + fieldName + ":\n";
+		foreach (FieldInfo fieldInfo in typeof(ReflectionType).GetFields())
+		{
+			object fieldValue = fieldInfo.GetValue(reflectionObject);
+			if( fieldValue == null )
+				continue;
+			
+			MethodInfo genericRetriveMethod = GetType().GetMethod("RetriveFieldsAndValues").MakeGenericMethod(fieldInfo.FieldType);
+			genericRetriveMethod.Invoke(this, new object[] { fieldInfo.Name, fieldValue, localDepth + 1});
+		}
 	}
 }
