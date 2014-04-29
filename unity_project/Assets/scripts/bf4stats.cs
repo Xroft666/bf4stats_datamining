@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.IO;
 
 using Newtonsoft.Json;
 
@@ -29,7 +30,9 @@ public class bf4stats : MonoBehaviour
 	public bool assignments = true;		
 	public bool upcomingUnlocks = true;
 	public bool urls = true;
-				
+
+
+			
 
 
 	private List<string> playerNames = new List<string>(); 
@@ -43,11 +46,23 @@ public class bf4stats : MonoBehaviour
 	private Vector2 playerInfoScrollView;
 	
 	private string output = "";
+	public List<PlayerData> finalList = new List<PlayerData>();
 
-	IEnumerator Start()
+	public string filepath = @"C:\MyApp\MySubDir\Data";
+
+	void Awake()
 	{
-		yield return StartCoroutine(RetriveNames());
+
+		//FillPlayerData(File.ReadAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt"));
+		FillPlayerData(File.ReadAllText(filepath+"/bf4output.txt"));
 	}
+
+//	IEnumerator Start()
+//	{
+//		Directory.CreateDirectory(filepath);
+//		yield return StartCoroutine(RetriveNames());
+//
+//	}
 
     IEnumerator RetriveNames()
     {
@@ -73,6 +88,20 @@ public class bf4stats : MonoBehaviour
 					playerNames.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
             	}
         }
+
+
+			foreach(string nome in playerNames)
+			{
+				//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt", nome + "\n");
+				yield return StartCoroutine(RetrivePlayerInfo(nome));
+				File.AppendAllText(filepath+"/bf4output.txt", output);
+			//print (output);
+
+			}
+
+
+	
+
 
 		print ("" + playerNames.Count + " names crawled in: " + Time.time + " seconds.");
     }
@@ -114,11 +143,11 @@ public class bf4stats : MonoBehaviour
 
 			// substring to ignore "var pd=" line and ";" in the end
 			currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(www.text.Substring(7, www.text.Length - 8), settings);
+			//print (currentPlayerData.player.name);
 
+			//Type objectType = currentPlayerData.GetType();
 
-			Type objectType = currentPlayerData.GetType();
-
-			MethodInfo genericRetriveMethod = GetType().GetMethod("RetriveFieldsAndValues").MakeGenericMethod(objectType);
+			//MethodInfo genericRetriveMethod = GetType().GetMethod("RetriveFieldsAndValues").MakeGenericMethod(objectType);
 			//genericRetriveMethod.Invoke(this, new object[] { "PlayerInfo", currentPlayerData, 0});
 
 
@@ -126,38 +155,75 @@ public class bf4stats : MonoBehaviour
 			// It might not get into because size
 			output = www.text;
 
+
+
 		}
 		print ("Done.");
 	}
 
-	void OnGUI()
+
+
+	public void FillPlayerData(string text)
 	{
-		GUILayout.BeginHorizontal();
 
-		GUILayout.BeginVertical();
+		string cleanText = text.Replace("var pd=", "");
 
-		namesScrollView = GUILayout.BeginScrollView(namesScrollView);
-		foreach(string name in playerNames )
+		string[] stringSeparators = new string[] {"};"};
+		string[] result;
+
+
+		result = cleanText.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
+		//Debug.Log(result.Length);
+		foreach (string s in result)
 		{
-			if( GUILayout.Button(name) )
-			{
-				StartCoroutine(RetrivePlayerInfo(name));
-			}
+			File.AppendAllText(filepath+"/clean bf4 output.txt", s);
+			//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4outputADADADAD.txt", s);
+
 		}
-		GUILayout.EndScrollView();
 
-		GUILayout.EndVertical();
-
-		playerInfoScrollView = GUILayout.BeginScrollView(playerInfoScrollView);
-
-		if( currentPlayerData != null )
+		foreach (string s in result)
 		{
-			GUILayout.Label(output);
+			string s2 = s+"}";
+			JsonSerializerSettings settings = new JsonSerializerSettings();
+			settings.NullValueHandling = NullValueHandling.Ignore;
+			
+			// substring to ignore "var pd=" line and ";" in the end
+			currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(s2, settings);
+			finalList.Add(currentPlayerData);
 		}
-		GUILayout.EndScrollView();
 
-		GUILayout.EndHorizontal();
+		Debug.Log(finalList[0].player.uName);
+
 	}
+
+//	void OnGUI()
+//	{
+//		GUILayout.BeginHorizontal();
+//
+//		GUILayout.BeginVertical();
+//
+//		namesScrollView = GUILayout.BeginScrollView(namesScrollView);
+//		foreach(string name in playerNames )
+//		{
+//			if( GUILayout.Button(name) )
+//			{
+//				StartCoroutine(RetrivePlayerInfo(name));
+//			}
+//		}
+//		GUILayout.EndScrollView();
+//
+//		GUILayout.EndVertical();
+//
+//		playerInfoScrollView = GUILayout.BeginScrollView(playerInfoScrollView);
+//
+//		if( currentPlayerData != null )
+//		{
+//			GUILayout.Label(output);
+//		}
+//		GUILayout.EndScrollView();
+//
+//		GUILayout.EndHorizontal();
+//	}
 
 	// Reflection method
 	// I made this awesome method just for nothing. It was too late when i realized that.
