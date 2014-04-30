@@ -11,6 +11,12 @@ public class bf4stats : MonoBehaviour
 {
     public int numberOfPages = 1;
 
+	public int startPage = 0;
+	public int endPage = 1;
+	private int currentPage = 0;
+
+	public bool OverwriteExistingFiles = false;
+
 	// include the following data
 	public bool imagePaths = true;
 	public bool details = true;
@@ -46,6 +52,9 @@ public class bf4stats : MonoBehaviour
 	private Vector2 playerInfoScrollView;
 	
 	private string output = "";
+
+	private int numPlayersDownloaded = 0;
+
 	public List<PlayerData> finalList = new List<PlayerData>();
 
 	public string filepath = @"C:\MyApp\MySubDir\Data";
@@ -53,8 +62,28 @@ public class bf4stats : MonoBehaviour
 	void Awake()
 	{
 
+
+	}
+
+	void LoadFilesFromHarddrive(){
 		//FillPlayerData(File.ReadAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt"));
-		FillPlayerData(File.ReadAllText(filepath+"/bf4output.txt"));
+		if(File.Exists(filepath+"/bf4output.txt")){
+			FillPlayerData(File.ReadAllText(filepath+"/bf4output.txt"));
+		}
+	}
+
+	void OnGUI(){
+		if(GUI.Button(new Rect(0,0,150,50),"Start Download")){
+			StartCoroutine(StartDownload());
+		}
+		if(GUI.Button(new Rect(151,0,150,50),"Load Files")){
+			LoadFilesFromHarddrive();
+		}
+	}
+
+	IEnumerator StartDownload(){
+		Directory.CreateDirectory(filepath);
+		yield return StartCoroutine(RetriveNames());
 	}
 
 //	IEnumerator Start()
@@ -69,41 +98,52 @@ public class bf4stats : MonoBehaviour
         string nameLineStart = "<a href=\"/pc/";
 		string nameLineEnd = "</a>";
 
-		print ("Retriving names...");
+		print("Starting downloading "+(endPage-startPage)+" pages.");
+		//print ("Retriving names...");
 
-        for( int i = 0; i < numberOfPages; i++ )
-            using (WWW www = new WWW(leaderboardURI + i) )
-            {
-				// extracting the html page
-                yield return www;
-				
-				int startIndex = 0;
-				while( (startIndex = www.text.IndexOf(nameLineStart, startIndex)) != -1 )
-				{
-					// gettin to the start of name
-					startIndex = www.text.IndexOf("\">", startIndex);
-					// getting to the end of name
-					int endIndex = www.text.IndexOf(nameLineEnd, startIndex);
-					// extracting the name
-					playerNames.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
-            	}
-        }
-
-
-			foreach(string nome in playerNames)
+        for( int i = 0; i < endPage-startPage; i++ )
+		{
+			currentPage = startPage+i;
+			print("starting downloading page "+currentPage);
+			if(!File.Exists(filepath+"/bf4output_page"+currentPage+".txt") || OverwriteExistingFiles)
 			{
-				//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt", nome + "\n");
-				yield return StartCoroutine(RetrivePlayerInfo(nome));
-				File.AppendAllText(filepath+"/bf4output.txt", output);
-			//print (output);
+				using (WWW www = new WWW(leaderboardURI + currentPage) )
+				{
+					// extracting the html page
+	                yield return www;
+					
+					int startIndex = 0;
+					while( (startIndex = www.text.IndexOf(nameLineStart, startIndex)) != -1 )
+					{
+						// gettin to the start of name
+						startIndex = www.text.IndexOf("\">", startIndex);
+						// getting to the end of name
+						int endIndex = www.text.IndexOf(nameLineEnd, startIndex);
+						// extracting the name
+						playerNames.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
+	            	}
 
+					foreach(string nome in playerNames)
+					{
+						//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt", nome + "\n");
+						yield return StartCoroutine(RetrivePlayerInfo(nome));
+					//print (output);
+
+					}
+					print("------------------writing to file----------------------");
+					File.AppendAllText(filepath+"/bf4output_page"+currentPage+".txt", output);
+					output = "";
+					print("completed downloading page "+currentPage);
+				}
+			}else{
+				print("this page allready exists!");
 			}
-
+		}
 
 	
 
 
-		print ("" + playerNames.Count + " names crawled in: " + Time.time + " seconds.");
+		//print ("" + playerNames.Count + " names crawled in: " + Time.time + " seconds.");
     }
 
 	IEnumerator RetrivePlayerInfo(string name)
@@ -153,12 +193,13 @@ public class bf4stats : MonoBehaviour
 
 			// Be aware of data capacity.
 			// It might not get into because size
-			output = www.text;
+			output += www.text;
 
 
 
 		}
-		print ("Done.");
+		numPlayersDownloaded++;
+		print ("Done. "+numPlayersDownloaded+" Players downloaded.");
 	}
 
 
@@ -189,8 +230,11 @@ public class bf4stats : MonoBehaviour
 			
 			// substring to ignore "var pd=" line and ";" in the end
 			currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(s2, settings);
-			finalList.Add(currentPlayerData);
+
+			//---------FILLS MEMORY ON BIG DOWNLOAD-------
+			//finalList.Add(currentPlayerData);
 		}
+
 
 		Debug.Log(finalList[0].player.uName);
 
