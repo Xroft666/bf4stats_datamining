@@ -46,7 +46,7 @@ public class bf4stats : MonoBehaviour
     private string leaderboardURI = "http://bf4stats.com/leaderboards/pc_player_score?start=";
 	private string playerInfoURI = "http://api.bf4stats.com/api/playerInfo?plat=pc&name=";
 
-	private PlayerData currentPlayerData = null;
+	private PlayerData[] playersData = null;
 
 	private Vector2 namesScrollView;
 	private Vector2 playerInfoScrollView;
@@ -54,8 +54,7 @@ public class bf4stats : MonoBehaviour
 	private string output = "";
 
 	private int numPlayersDownloaded = 0;
-
-	public List<PlayerData> finalList = new List<PlayerData>();
+	
 
 	public string filepath = @"C:\MyApp\MySubDir\Data";
 
@@ -70,6 +69,8 @@ public class bf4stats : MonoBehaviour
 		if(File.Exists(filepath+"/bf4output.txt")){
 			FillPlayerData(File.ReadAllText(filepath+"/bf4output.txt"));
 		}
+		else
+			Debug.Log("File wasn't found");
 	}
 
 	void OnGUI(){
@@ -78,6 +79,13 @@ public class bf4stats : MonoBehaviour
 		}
 		if(GUI.Button(new Rect(151,0,150,50),"Load Files")){
 			LoadFilesFromHarddrive();
+		}
+		if( playersData != null )
+		{
+			if(GUI.Button(new Rect(302,0,150,50),"Extract training data"))
+			{
+				ConvertToLearningData();
+			}
 		}
 	}
 
@@ -182,7 +190,7 @@ public class bf4stats : MonoBehaviour
 			settings.NullValueHandling = NullValueHandling.Ignore;
 
 			// substring to ignore "var pd=" line and ";" in the end
-			currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(www.text.Substring(7, www.text.Length - 8), settings);
+			//currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(www.text.Substring(7, www.text.Length - 8), settings);
 			//print (currentPlayerData.player.name);
 
 			//Type objectType = currentPlayerData.GetType();
@@ -206,6 +214,7 @@ public class bf4stats : MonoBehaviour
 
 	public void FillPlayerData(string text)
 	{
+		Debug.Log("start reading file");
 
 		string cleanText = text.Replace("var pd=", "");
 
@@ -222,6 +231,8 @@ public class bf4stats : MonoBehaviour
 
 		}
 
+		playersData = new PlayerData[result.Length];
+		int i = 0;
 		foreach (string s in result)
 		{
 			string s2 = s+"}";
@@ -229,15 +240,38 @@ public class bf4stats : MonoBehaviour
 			settings.NullValueHandling = NullValueHandling.Ignore;
 			
 			// substring to ignore "var pd=" line and ";" in the end
-			currentPlayerData = JsonConvert.DeserializeObject<PlayerData>(s2, settings);
-
+			playersData[i] = JsonConvert.DeserializeObject<PlayerData>(s2, settings);
+			i++;
 			//---------FILLS MEMORY ON BIG DOWNLOAD-------
-			//finalList.Add(currentPlayerData);
+		
 		}
 
+		Debug.Log("finished reading file");
+	}
 
-		Debug.Log(finalList[0].player.uName);
 
+	// For now I am extracting: score, kills, deaths, timeplayed and rank as class 
+	public void ConvertToLearningData()
+	{
+		Debug.Log("Started extracting learning data");
+		//FileStream stream = File.OpenWrite(filepath + "/bf4_learning_data.lrn");
+
+		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%" + playersData.Length + "\n");
+		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%6\n");	// number of columns
+		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%9\t1\t1\t1\t1\t3\n");
+		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%Key\t1\t2\t3\t4\tClass\n");
+		for(int i = 0; i < playersData.Length; i++ )
+		{
+			string line = i.ToString() + "\t" + playersData[i].player.score 
+										+ "\t" + playersData[i].stats.kills 
+										+ "\t" + playersData[i].stats.deaths
+										+ "\t" + playersData[i].stats.timePlayed
+										+ "\t" + playersData[i].stats.rank + "\n";
+
+			File.AppendAllText(filepath + "/bf4_learning_data.lrn", line);
+		}
+
+		Debug.Log("Finished extracting learning data");
 	}
 
 //	void OnGUI()
