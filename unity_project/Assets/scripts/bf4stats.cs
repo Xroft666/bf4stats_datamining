@@ -66,11 +66,21 @@ public class bf4stats : MonoBehaviour
 
 	void LoadFilesFromHarddrive(){
 		//FillPlayerData(File.ReadAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt"));
-		if(File.Exists(filepath+"/bf4output.txt")){
-			FillPlayerData(File.ReadAllText(filepath+"/bf4output.txt"));
+
+		string dataString = "";
+
+		for(int i=0;i<endPage-startPage;i++){
+			currentPage = startPage+i;
+			string fileName = filepath+"/bf4output_page"+currentPage+".txt";
+			if(File.Exists(fileName)){
+				//FillPlayerData(File.ReadAllText(filepath+"/bf4output.txt"));
+				dataString += File.ReadAllText(fileName);
+			}else{
+				Debug.Log("File wasn't found");
+			}
 		}
-		else
-			Debug.Log("File wasn't found");
+		FillPlayerData(dataString);
+	
 	}
 
 	void OnGUI(){
@@ -141,6 +151,7 @@ public class bf4stats : MonoBehaviour
 					}
 					print("------------------writing to file----------------------");
 					File.AppendAllText(filepath+"/bf4output_page"+currentPage+".txt", output);
+
 					output = "";
 					print("completed downloading page "+currentPage);
 				}
@@ -206,6 +217,7 @@ public class bf4stats : MonoBehaviour
 				output += www.text;
 				numPlayersDownloaded++;
 				print ("Done. "+numPlayersDownloaded+" Players downloaded.");
+				//Debug.ClearDeveloperConsole();
 			}else{
 				print("Connection timeout, retrying player "+name);
 				Debug.LogWarning("WARNING: Unstable Connection");
@@ -234,7 +246,7 @@ public class bf4stats : MonoBehaviour
 		//Debug.Log(result.Length);
 		foreach (string s in result)
 		{
-			File.AppendAllText(filepath+"/clean bf4 output.txt", s);
+//			File.AppendAllText(filepath+"/clean bf4 output.txt", s);
 			//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4outputADADADAD.txt", s);
 
 		}
@@ -250,6 +262,7 @@ public class bf4stats : MonoBehaviour
 			// substring to ignore "var pd=" line and ";" in the end
 			playersData[i] = JsonConvert.DeserializeObject<PlayerData>(s2, settings);
 			i++;
+			print("Added "+i+" players");
 			//---------FILLS MEMORY ON BIG DOWNLOAD-------
 		
 		}
@@ -264,20 +277,27 @@ public class bf4stats : MonoBehaviour
 		Debug.Log("Started extracting learning data");
 		//FileStream stream = File.OpenWrite(filepath + "/bf4_learning_data.lrn");
 
-		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%" + playersData.Length + "\n");
-		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%6\n");	// number of columns
-		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%9\t1\t1\t1\t1\t3\n");
-		File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%Key\t1\t2\t3\t4\tClass\n");
+		string line = "";
+		line +="%" + playersData.Length + "\n";
+		line +="%6\n";
+		line +="%9\t1\t1\t1\t1\t3\n";
+		line +="%Key\t1\t2\t3\t4\tClass\n";
+
+		//File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%" + playersData.Length + "\n");
+		//File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%6\n");	// number of columns
+		//File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%9\t1\t1\t1\t1\t3\n");
+		//File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%Key\t1\t2\t3\t4\tClass\n");
+
 		for(int i = 0; i < playersData.Length; i++ )
 		{
-			string line = i.ToString() + "\t" + playersData[i].player.score 
+			line += i.ToString() + "\t" + playersData[i].player.score 
 										+ "\t" + playersData[i].stats.kills 
 										+ "\t" + playersData[i].stats.deaths
 										+ "\t" + playersData[i].stats.timePlayed
 										+ "\t" + playersData[i].stats.rank + "\n";
 
-			File.AppendAllText(filepath + "/bf4_learning_data.lrn", line);
 		}
+		File.WriteAllText(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn", line);
 
 		Debug.Log("Finished extracting learning data");
 	}
