@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 
 public class bf4stats : MonoBehaviour 
 {
-    public int numberOfPages = 1;
+    //public int numberOfPages = 1;
 
 	public int startPage = 0;
 	public int endPage = 1;
@@ -121,6 +121,7 @@ public class bf4stats : MonoBehaviour
 	                yield return www;
 					
 					int startIndex = 0;
+					playerNames.Clear();
 					while( (startIndex = www.text.IndexOf(nameLineStart, startIndex)) != -1 )
 					{
 						// gettin to the start of name
@@ -150,8 +151,8 @@ public class bf4stats : MonoBehaviour
 
 	
 
-
-		//print ("" + playerNames.Count + " names crawled in: " + Time.time + " seconds.");
+		SoundReference.instance.PlaySound(SoundReference.instance.Done);
+		print ("" + numPlayersDownloaded + " names crawled in: " + Time.time + " seconds.");
     }
 
 	IEnumerator RetrivePlayerInfo(string name)
@@ -201,13 +202,20 @@ public class bf4stats : MonoBehaviour
 
 			// Be aware of data capacity.
 			// It might not get into because size
-			output += www.text;
+			if(www.error == null){
+				output += www.text;
+				numPlayersDownloaded++;
+				print ("Done. "+numPlayersDownloaded+" Players downloaded.");
+			}else{
+				print("Connection timeout, retrying player "+name);
+				Debug.LogWarning("WARNING: Unstable Connection");
+				RetrivePlayerInfo(name);
+			}
+
 
 
 
 		}
-		numPlayersDownloaded++;
-		print ("Done. "+numPlayersDownloaded+" Players downloaded.");
 	}
 
 
