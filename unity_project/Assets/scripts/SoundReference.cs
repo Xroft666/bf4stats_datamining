@@ -7,6 +7,9 @@ public class SoundReference : MonoBehaviour {
 
 	public AudioClip Done;
 
+	public AudioClip SmallProgress;
+	public AudioClip BigProgress;
+
 	public static SoundReference instance;
 	void Awake(){
 		instance = this;

@@ -87,16 +87,18 @@ public class bf4stats : MonoBehaviour
 		if(GUI.Button(new Rect(0,0,150,50),"Start Download")){
 			StartCoroutine(StartDownload());
 		}
-		if(GUI.Button(new Rect(151,0,150,50),"Load Files")){
-			LoadFilesFromHarddrive();
+		if(GUI.Button(new Rect(151,0,150,50),"ReadAndCreateLearningData")){
+			StartCoroutine(ReadAndCreateLearningData());
 		}
 		if( playersData != null )
 		{
-			if(GUI.Button(new Rect(302,0,150,50),"Extract training data"))
-			{
-				ConvertToLearningData();
-			}
+			//if(GUI.Button(new Rect(302,0,150,50),"Extract training data"))
+		//	{
+				//ConvertToLearningData(0);
+		//	}
 		}
+
+		GUI.Label(new Rect(Screen.width/2,Screen.height/2,1000,1000), "Progress: "+currentPage+"/"+(endPage-startPage)+" Downloaded "+numPlayersDownloaded+" in "+Time.time+" seconds");
 	}
 
 	IEnumerator StartDownload(){
@@ -154,6 +156,7 @@ public class bf4stats : MonoBehaviour
 
 					output = "";
 					print("completed downloading page "+currentPage);
+					SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
 				}
 			}else{
 				print("this page allready exists!");
@@ -217,6 +220,7 @@ public class bf4stats : MonoBehaviour
 				output += www.text;
 				numPlayersDownloaded++;
 				print ("Done. "+numPlayersDownloaded+" Players downloaded.");
+				SoundReference.instance.PlaySound(SoundReference.instance.SmallProgress);
 				//Debug.ClearDeveloperConsole();
 			}else{
 				print("Connection timeout, retrying player "+name);
@@ -262,26 +266,58 @@ public class bf4stats : MonoBehaviour
 			// substring to ignore "var pd=" line and ";" in the end
 			playersData[i] = JsonConvert.DeserializeObject<PlayerData>(s2, settings);
 			i++;
-			print("Added "+i+" players");
 			//---------FILLS MEMORY ON BIG DOWNLOAD-------
 		
 		}
+		print("Added "+i+" players");
 
 		Debug.Log("finished reading file");
 	}
 
+	public IEnumerator ReadAndCreateLearningData(){
+		if(File.Exists(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn")){
+			File.Delete(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn");
+		}
+
+
+
+		for(int i=0;i<endPage-startPage;i++){
+			currentPage = startPage+i;
+			string fileName = filepath+"/bf4output_page"+currentPage+".txt";
+			if(File.Exists(fileName)){
+				playersData = null;
+				string dataString = File.ReadAllText(fileName);
+				FillPlayerData(dataString);
+				if(i == 0){
+					string startOfFile = "";
+					startOfFile +="%" + (endPage-startPage)*50 + "\n";
+					startOfFile +="%6\n";
+					startOfFile +="%9\t1\t1\t1\t1\t3\n";
+					startOfFile +="%Key\t1\t2\t3\t4\tClass\n";
+					File.AppendAllText(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn", startOfFile);
+				}
+				ConvertToLearningData(i*50);
+				print ("LEARNING DATA PROGRESS: "+(currentPage+1)+"/"+endPage);
+				SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
+				yield return new WaitForEndOfFrame();
+			}else{
+				Debug.Log("File wasn't found");
+			}
+		}
+		print("CREATED LEARNING DATA");
+		SoundReference.instance.PlaySound(SoundReference.instance.Done);
+	}
 
 	// For now I am extracting: score, kills, deaths, timeplayed and rank as class 
-	public void ConvertToLearningData()
+	public void ConvertToLearningData(int playerNum)
 	{
+
+
 		Debug.Log("Started extracting learning data");
 		//FileStream stream = File.OpenWrite(filepath + "/bf4_learning_data.lrn");
 
 		string line = "";
-		line +="%" + playersData.Length + "\n";
-		line +="%6\n";
-		line +="%9\t1\t1\t1\t1\t3\n";
-		line +="%Key\t1\t2\t3\t4\tClass\n";
+
 
 		//File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%" + playersData.Length + "\n");
 		//File.AppendAllText(filepath + "/bf4_learning_data.lrn", "%6\n");	// number of columns
@@ -290,16 +326,17 @@ public class bf4stats : MonoBehaviour
 
 		for(int i = 0; i < playersData.Length; i++ )
 		{
-			line += i.ToString() + "\t" + playersData[i].player.score 
+			line += (playerNum+i).ToString() + "\t" + playersData[i].player.score 
 										+ "\t" + playersData[i].stats.kills 
 										+ "\t" + playersData[i].stats.deaths
 										+ "\t" + playersData[i].stats.timePlayed
 										+ "\t" + playersData[i].stats.rank + "\n";
 
 		}
-		File.WriteAllText(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn", line);
+		File.AppendAllText(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn", line);
 
 		Debug.Log("Finished extracting learning data");
+
 	}
 
 //	void OnGUI()
