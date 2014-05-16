@@ -290,7 +290,7 @@ public class bf4stats : MonoBehaviour
 					startOfFile +="%6\n";
 					startOfFile +="%9\t1\t1\t1\t1\t3\n";
 					startOfFile +="%Key\t1\t2\t3\t4\tClass\n";
-					File.AppendAllText(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn", startOfFile);
+					File.AppendAllText(Application.dataPath + "/Data/LearningData/LearningData"+startPage+"-"+endPage+".lrn", startOfFile);
 				}
 				ConvertToLearningData(i*50);
 				print ("LEARNING DATA PROGRESS: "+(currentPage+1)+"/"+endPage);
@@ -329,7 +329,7 @@ public class bf4stats : MonoBehaviour
 										+ "\t" + playersData[i].stats.rank + "\n";
 
 		}
-		File.AppendAllText(filepath + "/bf4_learning_data_page"+startPage+"-"+endPage+".lrn", line);
+		File.AppendAllText(Application.dataPath + "/Data/LearningData/LearningData"+startPage+"-"+endPage+".lrn", line);
 
 		Debug.Log("Finished extracting learning data");
 
