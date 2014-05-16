@@ -58,9 +58,11 @@ public class bf4stats : MonoBehaviour
 
 	public string filepath = @"C:\MyApp\MySubDir\Data";
 
+	public static bf4stats instance;
+
 	void Awake()
 	{
-
+		instance = this;
 
 	}
 
