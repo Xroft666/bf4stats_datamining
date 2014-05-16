@@ -12,7 +12,10 @@ public class TupleFactory : MonoBehaviour {
 	public int endPage = 1;
 	private int currentPage = 0;
 
+	public TextAsset tupleFile;
+
 	public string filepath;
+	public string fileName;
 
 	public List<Tuple> tupleList = new List<Tuple>();
 
@@ -58,6 +61,10 @@ public class TupleFactory : MonoBehaviour {
 			//print("TEST");
 			StartCoroutine(CreateTuples());
 		}
+		if(GUI.Button(new Rect(250,250,250,50), "load tuples from file "+tupleFile.name)){
+			//print("TEST");
+			ReadTupleFile();
+		}
 	}
 
 	IEnumerator CreateTuples(){
@@ -76,11 +83,14 @@ public class TupleFactory : MonoBehaviour {
 				}
 
 				print("created tuples from file "+currentPage);
+				SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
 				yield return new WaitForEndOfFrame();
 			}else{
 				Debug.Log("File wasn't found");
 			}
 		}
+
+		SaveTupleDataToFile();
 	}
 
 	void FillTuple(Tuple t,PlayerData playerData){
@@ -112,5 +122,23 @@ public class TupleFactory : MonoBehaviour {
 			i++;			
 		}
 		return playersData;
+	}
+
+	void SaveTupleDataToFile(){
+		string toWrite = JsonConvert.SerializeObject(tupleList);
+		Directory.CreateDirectory(Application.dataPath+"/Data/Tuples/");
+		File.WriteAllText(Application.dataPath+"/Data/Tuples/"+fileName+".txt",toWrite);
+		tupleList = new List<Tuple>();
+		SoundReference.instance.PlaySound(SoundReference.instance.Done);
+		print("Done creating tuples");
+	}
+
+	void ReadTupleFile(){
+		List<Tuple> t;
+		string s = tupleFile.text; 
+		t = JsonConvert.DeserializeObject<List<Tuple>>(s);
+		tupleList = t;
+		print("Done loading file");
+		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 	}
 }
