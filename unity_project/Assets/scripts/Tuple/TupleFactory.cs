@@ -14,7 +14,7 @@ public class TupleFactory : MonoBehaviour {
 
 	public TextAsset tupleFile;
 
-	public string filepath;
+	public string PlayerDataFilePath;
 	public string fileName;
 
 	public List<Tuple> tupleList = new List<Tuple>();
@@ -70,7 +70,7 @@ public class TupleFactory : MonoBehaviour {
 	IEnumerator CreateTuples(){
 		for(int i=0;i<endPage-startPage;i++){
 			currentPage = startPage+i;
-			string fileName = filepath+"/bf4output_page"+currentPage+".txt";
+			string fileName = PlayerDataFilePath+"/bf4output_page"+currentPage+".txt";
 			if(File.Exists(fileName)){
 				PlayerData[] playersData = null;
 				string dataString = File.ReadAllText(fileName);
@@ -96,6 +96,11 @@ public class TupleFactory : MonoBehaviour {
 	void FillTuple(Tuple t,PlayerData playerData){
 		t.setData("playerName",playerData.player.name);
 		t.setData("kills",playerData.stats.kills.ToString());
+		t.setData("headshots",playerData.stats.headshots.ToString());
+		t.setData("deaths",playerData.stats.deaths.ToString());
+		t.setData("dogtagsTaken",playerData.stats.dogtagsTaken.ToString());
+		t.setData("flagCaptures",playerData.stats.flagCaptures.ToString());
+		t.setData("flagDefend",playerData.stats.flagDefend.ToString());
 	}
 
 	public PlayerData[] FillPlayerData(string text)
@@ -141,4 +146,6 @@ public class TupleFactory : MonoBehaviour {
 		print("Done loading file");
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 	}
+
+
 }

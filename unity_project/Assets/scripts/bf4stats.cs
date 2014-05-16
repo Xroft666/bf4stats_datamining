@@ -249,13 +249,7 @@ public class bf4stats : MonoBehaviour
 
 
 		result = cleanText.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries);
-		//Debug.Log(result.Length);
-		foreach (string s in result)
-		{
-//			File.AppendAllText(filepath+"/clean bf4 output.txt", s);
-			//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4outputADADADAD.txt", s);
 
-		}
 
 		playersData = new PlayerData[result.Length];
 		int i = 0;

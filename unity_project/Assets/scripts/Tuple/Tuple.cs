@@ -6,22 +6,17 @@ using System.Collections.Generic;
 public class Tuple{
 	public List<string> data = new List<string>();
 	public List<string> dataName = new List<string>();
-	 List<float> dataNormalized = new List<float>();
-
-	string findName;
-
+	public List<float> dataNormalized = new List<float>();
+	
 	public string getDataFromString(string name){
-		findName = name;
-		return data[dataName.FindIndex(isName)];
+		return data[dataName.FindIndex(delegate(string obj) {
+			return obj == name;
+		})];
 	}
 	public float getNormalizedDataFromString(string name){
-		findName = name;
-		return dataNormalized[dataName.FindIndex(isName)];
-	}
-
-	private bool isName(string name)	
-	{
-		return (name==findName);
+		return dataNormalized[dataName.FindIndex(delegate(string obj) {
+			return obj == name;
+		})];
 	}
 
 	public void setData(string name, string data){
