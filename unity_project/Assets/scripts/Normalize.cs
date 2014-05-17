@@ -19,7 +19,7 @@ public class Normalize : MonoBehaviour {
 	public float[] max;
 
 
-	public void StartNormailzation(Tuple[] t){
+	public void NormalizeTuples(Tuple[] t){
 
 		max = new float[t[0].data.Count]; 
 		min = new float[t[0].data.Count];
@@ -44,10 +44,42 @@ public class Normalize : MonoBehaviour {
 		print("Done normalizing");
 	}
 
-	void normalizeTuple(Tuple t){
+	private void normalizeTuple(Tuple t){
 		t.dataNormalized = new List<float>();
 		for(int i=0;i<t.data.Count;i++){
 			t.dataNormalized.Add((((t.data[i]-min[i])/(max[i]-min[i]))*(newMax-newMin)+newMin));
+		}
+	}
+
+	public void FactorizeTuples(Tuple[] t)
+	{
+		for(int i=1; i<t.Length; i++)
+		{
+			FactorizeTuple(t, i*1.1f);
+		}
+	}
+
+	private void FactorizeTuple(Tuple t, float f)
+	{
+		for(int i=0; i<t.dataNormalized.Count; i++)
+		{
+			t.dataNormalized[i] += f;
+		}
+	}
+
+	public void UnFactorizeTuples(Tuple[] t)
+	{
+		for(int i=1; i<t.Length; i++)
+		{
+			UnFactorizeTuple(t, i*1.1f);
+		}
+	}
+
+	private void UnFactorizeTuple(Tuple t, float f)
+	{
+		for(int i=0; i<t.dataNormalized.Count; i++)
+		{
+			t.dataNormalized[i] -= f;
 		}
 	}
 

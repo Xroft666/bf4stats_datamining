@@ -203,7 +203,7 @@ public class TupleFactory : MonoBehaviour {
 
 	public void NormalizeTupleFile(){
 		ReadTupleFile();
-		Normalize.instance.StartNormailzation(tupleList.ToArray());
+		Normalize.instance.NormalizeTuples(tupleList.ToArray());
 		SaveTupleDataToFile();
 	}
 
