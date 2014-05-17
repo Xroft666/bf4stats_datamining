@@ -89,9 +89,7 @@ public class bf4stats : MonoBehaviour
 		if(GUI.Button(new Rect(0,0,150,50),"Start Download")){
 			StartCoroutine(StartDownload());
 		}
-		if(GUI.Button(new Rect(151,0,150,50),"ReadAndCreateLearningData")){
-			StartCoroutine(ReadAndCreateLearningData());
-		}
+
 		if( playersData != null )
 		{
 			//if(GUI.Button(new Rect(302,0,150,50),"Extract training data"))

@@ -71,6 +71,13 @@ public class TupleFactory : MonoBehaviour {
 			NormalizeTupleFile();
 		}
 
+		if(tupleList.Count > 0){
+			if(GUI.Button(new Rect(151,0,150,50),"Create learn data")){
+				StartCoroutine(CreateLearningData.instance.LearnDataFromTuples(tupleList));
+			}
+		}
+		
+
 	}
 
 	IEnumerator CreateTuples(){
