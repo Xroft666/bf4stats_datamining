@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -55,15 +56,15 @@ public class Normalize : MonoBehaviour {
 	{
 		for(int i=1; i<t.Length; i++)
 		{
-			FactorizeTuple(t, i*1.1f);
+			FactorizeTuple(t[i]);
 		}
 	}
 
-	private void FactorizeTuple(Tuple t, float f)
+	private void FactorizeTuple(Tuple t)
 	{
-		for(int i=0; i<t.dataNormalized.Count; i++)
+		for(int i=1; i<t.dataNormalized.Count; i++)
 		{
-			t.dataNormalized[i] += f;
+			t.dataNormalized[i] += i;
 		}
 	}
 
@@ -71,16 +72,29 @@ public class Normalize : MonoBehaviour {
 	{
 		for(int i=1; i<t.Length; i++)
 		{
-			UnFactorizeTuple(t, i*1.1f);
+			UnFactorizeTuple(t[i]);
 		}
 	}
 
-	private void UnFactorizeTuple(Tuple t, float f)
+	private void UnFactorizeTuple(Tuple t)
 	{
-		for(int i=0; i<t.dataNormalized.Count; i++)
+		for(int i=1; i<t.dataNormalized.Count; i++)
 		{
-			t.dataNormalized[i] -= f;
+			t.dataNormalized[i] -= i;
 		}
+	}
+
+	public string PrintUnfactorizedData(float[] data)
+	{
+		StringBuilder sb = new StringBuilder();
+
+		foreach(float f in data)
+		{
+			int i = (int)System.Math.Truncate(f);
+			sb.Append("idx:").Append(i).Append(",v:").Append(f-i).Append(" | ");
+		}
+
+		return sb.ToString();
 	}
 
 	/*
@@ -112,7 +126,7 @@ public class Normalize : MonoBehaviour {
 				if(outVal < min){
 					min = outVal;
 				}
-				if(outVal > max){
+				if(outVal > max){ 
 					max = outVal;
 				}
 			}
