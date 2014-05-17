@@ -125,6 +125,15 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("revives",pd.stats.revives);
 		t.setData("killAssists",pd.stats.killAssists);
 
+		t.setData("kdr",pd.stats.extra.kdr);
+		t.setData("wlr",pd.stats.extra.wlr);
+		t.setData("spm",pd.stats.extra.spm);
+		t.setData("gspm",pd.stats.extra.gspm);
+		t.setData("kpm",pd.stats.extra.kpm);
+		t.setData("sfpm",pd.stats.extra.sfpm);
+		t.setData("hkp",pd.stats.extra.hkp);
+		t.setData("khp",pd.stats.extra.khp);
+		t.setData("accuracy",pd.stats.extra.accuracy);
 
 
 		/*
@@ -170,7 +179,7 @@ public class TupleFactory : MonoBehaviour {
 		File.WriteAllText(Application.dataPath+"/Data/Tuples/"+fileName+".txt",toWrite);
 		tupleList = new List<Tuple>();
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
-		print("Done creating tuples");
+		print("Done saving tuples");
 	}
 
 	void ReadTupleFile(){
