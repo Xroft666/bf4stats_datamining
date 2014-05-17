@@ -4,11 +4,12 @@ using System.Collections.Generic;
 
 [System.Serializable]
 public class Tuple{
-	public List<string> data = new List<string>();
+	public int playerID;
+	public List<float> data = new List<float>();
 	public List<string> dataName = new List<string>();
 	public List<float> dataNormalized = new List<float>();
 	
-	public string getDataFromString(string name){
+	public float getDataFromString(string name){
 		return data[dataName.FindIndex(delegate(string obj) {
 			return obj == name;
 		})];
@@ -19,7 +20,7 @@ public class Tuple{
 		})];
 	}
 
-	public void setData(string name, string data){
+	public void setData(string name, float data){
 		this.data.Add(data);
 		this.dataName.Add(name);
 	}

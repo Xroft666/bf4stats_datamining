@@ -322,11 +322,11 @@ public class bf4stats : MonoBehaviour
 
 		for(int i = 0; i < playersData.Length; i++ )
 		{
-			line += (playerNum+i).ToString() + "\t" + playersData[i].player.score 
-										+ "\t" + playersData[i].stats.kills 
-										+ "\t" + playersData[i].stats.deaths
-										+ "\t" + playersData[i].stats.timePlayed
-										+ "\t" + playersData[i].stats.rank + "\n";
+			line += (playerNum+i).ToString() + "\t" + playersData[i].stats.extra.weaKpm 
+										//+ "\t" + playersData[i].stats.kills 
+										//+ "\t" + playersData[i].stats.deaths
+										//+ "\t" + playersData[i].stats.timePlayed
+										+ "\t" + playersData[i].stats.extra.vehKpm + "\n";
 
 		}
 		File.AppendAllText(Application.dataPath + "/Data/LearningData/LearningData"+startPage+"-"+endPage+".lrn", line);

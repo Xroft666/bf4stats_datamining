@@ -65,6 +65,12 @@ public class TupleFactory : MonoBehaviour {
 			//print("TEST");
 			ReadTupleFile();
 		}
+
+		if(GUI.Button(new Rect(500,250,250,50), "Normalize Tuple from File "+tupleFile.name)){
+			//print("TEST");
+			NormalizeTupleFile();
+		}
+
 	}
 
 	IEnumerator CreateTuples(){
@@ -93,14 +99,43 @@ public class TupleFactory : MonoBehaviour {
 		SaveTupleDataToFile();
 	}
 
-	void FillTuple(Tuple t,PlayerData playerData){
-		t.setData("playerName",playerData.player.name);
-		t.setData("kills",playerData.stats.kills.ToString());
-		t.setData("headshots",playerData.stats.headshots.ToString());
-		t.setData("deaths",playerData.stats.deaths.ToString());
-		t.setData("dogtagsTaken",playerData.stats.dogtagsTaken.ToString());
-		t.setData("flagCaptures",playerData.stats.flagCaptures.ToString());
-		t.setData("flagDefend",playerData.stats.flagDefend.ToString());
+	void FillTuple(Tuple t,PlayerData pd){
+
+		t.playerID = int.Parse(pd.player.id);
+
+		t.setData("timePlayed",pd.stats.timePlayed);
+		t.setData("score",pd.player.score);
+		t.setData("kills",pd.stats.kills);
+		t.setData("deaths",pd.stats.deaths);
+		t.setData("shotsFired",pd.stats.shotsFired);
+		t.setData("shotsHit",pd.stats.shotsHit);
+		t.setData("numLosses",pd.stats.numLosses);
+		t.setData("numWins",pd.stats.numWins);
+		t.setData("weaponKills",pd.stats.extra.weaponKills);
+		t.setData("vehicleKills",pd.stats.extra.vehicleKills);
+		t.setData("medals",pd.stats.extra.medals);
+		t.setData("headshots",pd.stats.headshots);
+		t.setData("suppressionAssists",pd.stats.suppressionAssists);
+		t.setData("avengerKills",pd.stats.avengerKills);
+		t.setData("saviorKills",pd.stats.saviorKills);
+		t.setData("nemesisKills",pd.stats.nemesisKills);
+		t.setData("resupplies",pd.stats.resupplies);
+		t.setData("repairs",pd.stats.repairs);
+		t.setData("heals",pd.stats.heals);
+		t.setData("revives",pd.stats.revives);
+		t.setData("killAssists",pd.stats.killAssists);
+
+
+
+		/*
+		t.setData("playerName",pd.player.name);
+		t.setData("kills",pd.stats.kills.ToString());
+		t.setData("headshots",pd.stats.headshots.ToString());
+		t.setData("deaths",pd.stats.deaths.ToString());
+		t.setData("dogtagsTaken",pd.stats.dogtagsTaken.ToString());
+		t.setData("flagCaptures",pd.stats.flagCaptures.ToString());
+		t.setData("flagDefend",pd.stats.flagDefend.ToString());
+		*/
 	}
 
 	public PlayerData[] FillPlayerData(string text)
@@ -144,8 +179,18 @@ public class TupleFactory : MonoBehaviour {
 		t = JsonConvert.DeserializeObject<List<Tuple>>(s);
 		tupleList = t;
 		print("Done loading file");
+
+		//Normalize.instance.StartNormailzation(t.ToArray());
+
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 	}
+
+	void NormalizeTupleFile(){
+		ReadTupleFile();
+		Normalize.instance.StartNormailzation(tupleList.ToArray());
+		SaveTupleDataToFile();
+	}
+
 
 
 }
