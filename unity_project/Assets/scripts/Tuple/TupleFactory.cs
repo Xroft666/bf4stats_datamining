@@ -17,6 +17,8 @@ public class TupleFactory : MonoBehaviour {
 	public string PlayerDataFilePath;
 	public string fileName;
 
+	public int supportThreshold; // for apriori
+
 	public List<Tuple> tupleList = new List<Tuple>();
 
 	/*
@@ -49,37 +51,8 @@ public class TupleFactory : MonoBehaviour {
 	public static TupleFactory instance;
 	void Awake(){
 		instance = this;
-
 	}
 
-	void Start(){
-		//filepath = bf4stats.instance.filepath;
-	}
-	/*
-	void OnGUI(){
-		if(GUI.Button(new Rect(0,250,250,50), "create tuples "+startPage+" "+endPage)){
-			//print("TEST");
-			StartCoroutine(CreateTuples());
-		}
-		if(GUI.Button(new Rect(250,250,250,50), "load tuples from file "+tupleFile.name)){
-			//print("TEST");
-			ReadTupleFile();
-		}
-
-		if(GUI.Button(new Rect(500,250,250,50), "Normalize Tuple from File "+tupleFile.name)){
-			//print("TEST");
-			NormalizeTupleFile();
-		}
-
-		if(tupleList.Count > 0){
-			if(GUI.Button(new Rect(151,0,150,50),"Create learn data")){
-				StartCoroutine(CreateLearningData.instance.LearnDataFromTuples(tupleList));
-			}
-		}
-		
-
-	}
-	*/
 	public IEnumerator CreateTuples(){
 		for(int i=0;i<endPage-startPage;i++){
 			currentPage = startPage+i;
@@ -208,10 +181,17 @@ public class TupleFactory : MonoBehaviour {
 
 	public void NormalizeTupleFile(){
 		ReadTupleFile();
-		Normalize.instance.StartNormailzation(tupleList.ToArray());
+		Normalize.instance.NormalizeTuples(tupleList.ToArray());
 		SaveTupleDataToFile();
 	}
 
-
+	public void RunAPrioriFromFile()
+	{
+		ReadTupleFile();
+		Normalize.instance.FactorizeTuples(tupleList.ToArray());
+		StartCoroutine(Apriori.apriori(tupleList.ToArray(), supportThreshold));
+		//Normalize.instance.UnFactorizeTuples(tupleList.ToArray());
+		//SaveTupleDataToFile();
+	}
 
 }

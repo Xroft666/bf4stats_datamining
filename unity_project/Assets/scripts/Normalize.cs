@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -20,7 +21,7 @@ public class Normalize : MonoBehaviour {
 	public float[] max;
 
 
-	public void StartNormailzation(Tuple[] t){
+	public void NormalizeTuples(Tuple[] t){
 
 		max = new float[t[0].data.Count]; 
 		min = new float[t[0].data.Count];
@@ -45,7 +46,7 @@ public class Normalize : MonoBehaviour {
 		print("Done normalizing");
 	}
 
-	void normalizeTuple(Tuple t){
+	private void normalizeTuple(Tuple t){
 		t.dataNormalized = new List<float>();
 		for(int i=0;i<t.data.Count;i++){
 			float value = (((t.data[i]-min[i])/(max[i]-min[i]))*(newMax-newMin)+newMin);
@@ -53,6 +54,51 @@ public class Normalize : MonoBehaviour {
 			value = Mathf.Floor(value * (1/roundToNearest)) / (1/roundToNearest);
 			t.dataNormalized.Add(value);
 		}
+	}
+
+	public void FactorizeTuples(Tuple[] t)
+	{
+		for(int i=1; i<t.Length; i++)
+		{
+			FactorizeTuple(t[i]);
+		}
+	}
+
+	private void FactorizeTuple(Tuple t)
+	{
+		for(int i=1; i<t.dataNormalized.Count; i++)
+		{
+			t.dataNormalized[i] += i;
+		}
+	}
+
+	public void UnFactorizeTuples(Tuple[] t)
+	{
+		for(int i=1; i<t.Length; i++)
+		{
+			UnFactorizeTuple(t[i]);
+		}
+	}
+
+	private void UnFactorizeTuple(Tuple t)
+	{
+		for(int i=1; i<t.dataNormalized.Count; i++)
+		{
+			t.dataNormalized[i] -= i;
+		}
+	}
+
+	public string PrintUnfactorizedData(float[] data)
+	{
+		StringBuilder sb = new StringBuilder();
+
+		foreach(float f in data)
+		{
+			int i = (int)System.Math.Truncate(f);
+			sb.Append("idx:").Append(i).Append(",v:").Append(f-i).Append(" | ");
+		}
+
+		return sb.ToString();
 	}
 
 	/*
@@ -84,7 +130,7 @@ public class Normalize : MonoBehaviour {
 				if(outVal < min){
 					min = outVal;
 				}
-				if(outVal > max){
+				if(outVal > max){ 
 					max = outVal;
 				}
 			}

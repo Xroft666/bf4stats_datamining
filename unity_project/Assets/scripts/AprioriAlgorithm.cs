@@ -6,13 +6,18 @@ using System.Collections.Generic;
  * performs the a-Priori algorithm on the transactions dataset with a given minimum supportThreshold.
  * all columns of transactions should have distinct values!!
  */
-public class Apriori : MonoBehaviour 
+public class Apriori 
 {
-	public static List<ItemSet> apriori( float[][] transactions, int supportThreshold ) 
+	public static List<ItemSet> lastRunSet;
+
+	public static IEnumerator apriori( Tuple[] transactions, int supportThreshold ) 
 	{
-		List<ItemSet> ret = new List<ItemSet>();
+		List<ItemSet> ret = new List<ItemSet>(); 
 		int k;
 		Dictionary<ItemSet, int> frequentItemSets = generateFrequentItemSetsLevel1( transactions, supportThreshold );
+		Debug.Log("level 1 done");
+		SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
+		yield return new WaitForEndOfFrame();
 		
 		// searches for frequent patterns of dim k, until no frequent patterns for current k found
 		for (k = 1; frequentItemSets.Count > 0; k++) {
@@ -25,10 +30,13 @@ public class Apriori : MonoBehaviour
 			
 			Debug.Log( " found " + frequentItemSets.Count );
 			foreach(ItemSet i in frequentItemSets.Keys)
-				Debug.Log(i.ToString());
+				Debug.Log(Normalize.instance.PrintUnfactorizedData(i.set));
+
+			SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
+			yield return new WaitForEndOfFrame();
 		}
 		
-		return ret;
+		lastRunSet = ret;
 	}
 	
 	/**
@@ -36,7 +44,7 @@ public class Apriori : MonoBehaviour
 	 * @param lowerLevelItemSets the frequent itemsets from the last iteration (k-1)
 	 * @return k-dimensional frequent itemsets
 	 */
-	private static Dictionary<ItemSet, int> generateFrequentItemSets( int supportThreshold, float[][] transactions,
+	private static Dictionary<ItemSet, int> generateFrequentItemSets( int supportThreshold, Tuple[] transactions,
 	                                                                    Dictionary<ItemSet, int> lowerLevelItemSets ) 
 	{
 		
@@ -105,16 +113,16 @@ public class Apriori : MonoBehaviour
 	/**
      * returns all frequent onedimensional itemsets of transactions.
      */
-	private static Dictionary<ItemSet, int> generateFrequentItemSetsLevel1(float[][] transactions, int supportThreshold ) 
+	private static Dictionary<ItemSet, int> generateFrequentItemSetsLevel1(Tuple[] transactions, int supportThreshold ) 
 	{
 		Dictionary<ItemSet, int> ret = new Dictionary<ItemSet, int>();
 		
 		List<float> allItems = new List<float>();
 		
 		// get all 1-dim items
-		foreach(float[] items in transactions)
+		foreach(Tuple items in transactions)
 		{
-			foreach(float item in items)
+			foreach(float item in items.dataNormalized)
 			{
 				if(allItems.Contains(item) == false)
 					allItems.Add(item);
@@ -136,7 +144,7 @@ public class Apriori : MonoBehaviour
 	/**
      * counts the support of itemSet in all rows of transactions
      */
-	private static int countSupport( float[] itemSet, float[][] transactions ) {
+	private static int countSupport( float[] itemSet, Tuple[] transactions ) {
 		// Assumes that items in ItemSets and transactions are both unique
 		int supportCount = 0;
 		
@@ -144,7 +152,7 @@ public class Apriori : MonoBehaviour
     	 * for every row (student), checking if it made the choices of the itemset, 
     	 * and then increasing the support count.
     	 */
-		foreach(float[] row in transactions)
+		foreach(Tuple row in transactions)
 		{
 			if(CheckChoiceInRow(itemSet, row))
 				supportCount++;
@@ -156,14 +164,14 @@ public class Apriori : MonoBehaviour
 	/**
      * checks whether row contains itemSet
      */
-	private static bool CheckChoiceInRow(float[] itemSet, float[] row)
+	private static bool CheckChoiceInRow(float[] itemSet, Tuple row)
 	{
 		// check if whole choice found in row
 		foreach(float item in itemSet)
 		{
 			// check if single item found in row
 			bool foundItem = false;
-			foreach(float choice in row)
+			foreach(float choice in row.dataNormalized)
 			{
 				if(item == choice)
 				{

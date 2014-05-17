@@ -28,6 +28,11 @@ public class Interface : MonoBehaviour {
 		if(GUI.Button(new Rect(0,100,250,50), "Normalize Tuple from File "+TupleFactory.instance.tupleFile.name)){
 			TupleFactory.instance.NormalizeTupleFile();
 		}
+
+		if(GUI.Button(new Rect(250, 0, 250, 50), "Run aPriori from File "+TupleFactory.instance.tupleFile.name))
+		{
+			TupleFactory.instance.RunAPrioriFromFile();
+		}
 		
 		if(TupleFactory.instance.tupleList.Count > 0){
 			if(GUI.Button(new Rect(500,100,250,50),"Create learn data from tuples")){
