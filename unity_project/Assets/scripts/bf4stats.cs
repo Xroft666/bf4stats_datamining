@@ -86,9 +86,9 @@ public class bf4stats : MonoBehaviour
 	}
 
 	void OnGUI(){
-		if(GUI.Button(new Rect(0,0,150,50),"Start Download")){
-			StartCoroutine(StartDownload());
-		}
+		//if(GUI.Button(new Rect(0,0,150,50),"Start Download")){
+		//	StartCoroutine(StartDownload());
+		//}
 
 		if( playersData != null )
 		{
@@ -98,10 +98,10 @@ public class bf4stats : MonoBehaviour
 		//	}
 		}
 
-		GUI.Label(new Rect(Screen.width/2,Screen.height/2,1000,1000), "Progress: "+currentPage+"/"+(endPage-startPage)+" Downloaded "+numPlayersDownloaded+" in "+Time.time+" seconds");
+		//GUI.Label(new Rect(Screen.width/2,Screen.height/2,1000,1000), "Progress: "+currentPage+"/"+(endPage-startPage)+" Downloaded "+numPlayersDownloaded+" in "+Time.time+" seconds");
 	}
 
-	IEnumerator StartDownload(){
+	public IEnumerator StartDownload(){
 		Directory.CreateDirectory(filepath);
 		yield return StartCoroutine(RetriveNames());
 	}

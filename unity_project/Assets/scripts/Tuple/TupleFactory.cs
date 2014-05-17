@@ -55,7 +55,7 @@ public class TupleFactory : MonoBehaviour {
 	void Start(){
 		//filepath = bf4stats.instance.filepath;
 	}
-
+	/*
 	void OnGUI(){
 		if(GUI.Button(new Rect(0,250,250,50), "create tuples "+startPage+" "+endPage)){
 			//print("TEST");
@@ -79,8 +79,8 @@ public class TupleFactory : MonoBehaviour {
 		
 
 	}
-
-	IEnumerator CreateTuples(){
+	*/
+	public IEnumerator CreateTuples(){
 		for(int i=0;i<endPage-startPage;i++){
 			currentPage = startPage+i;
 			string fileName = PlayerDataFilePath+"/bf4output_page"+currentPage+".txt";
@@ -189,7 +189,7 @@ public class TupleFactory : MonoBehaviour {
 		print("Done saving tuples");
 	}
 
-	void ReadTupleFile(){
+	public void ReadTupleFile(){
 		List<Tuple> t;
 		string s = tupleFile.text; 
 		t = JsonConvert.DeserializeObject<List<Tuple>>(s);
@@ -201,7 +201,7 @@ public class TupleFactory : MonoBehaviour {
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 	}
 
-	void NormalizeTupleFile(){
+	public void NormalizeTupleFile(){
 		ReadTupleFile();
 		Normalize.instance.StartNormailzation(tupleList.ToArray());
 		SaveTupleDataToFile();
