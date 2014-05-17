@@ -95,7 +95,7 @@ public class Normalize : MonoBehaviour {
 		foreach(float f in data)
 		{
 			int i = (int)System.Math.Truncate(f);
-			sb.Append("idx:").Append(i).Append(",v:").Append(f-i).Append(" | ");
+			sb.Append(TupleFactory.instance.tupleList[0].dataName[i]).Append(": ").Append(f-i).Append(" | ");
 		}
 
 		return sb.ToString();
