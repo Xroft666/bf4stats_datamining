@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Normalize : MonoBehaviour {
 
+	public float roundToNearest = 0;
 	//user specified max and min value for normalization
 	public float newMin,newMax;
 
@@ -47,7 +48,10 @@ public class Normalize : MonoBehaviour {
 	void normalizeTuple(Tuple t){
 		t.dataNormalized = new List<float>();
 		for(int i=0;i<t.data.Count;i++){
-			t.dataNormalized.Add((((t.data[i]-min[i])/(max[i]-min[i]))*(newMax-newMin)+newMin));
+			float value = (((t.data[i]-min[i])/(max[i]-min[i]))*(newMax-newMin)+newMin);
+			value = Mathf.Clamp(value,newMin,newMax);
+			value = Mathf.Floor(value * (1/roundToNearest)) / (1/roundToNearest);
+			t.dataNormalized.Add(value);
 		}
 	}
 

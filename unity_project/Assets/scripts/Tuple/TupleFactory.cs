@@ -102,8 +102,13 @@ public class TupleFactory : MonoBehaviour {
 				Debug.Log("File wasn't found");
 			}
 		}
-
+		CleanDuplicateTuples();
 		SaveTupleDataToFile();
+	}
+
+
+	void CleanDuplicateTuples(){
+		
 	}
 
 	void FillTuple(Tuple t,PlayerData pd){

@@ -33,7 +33,7 @@ public class CreateLearningData : MonoBehaviour {
 
 		string startOfFile = "";
 		startOfFile +="%" + tupleList.Count + "\n";
-		startOfFile +="%"+tupleList[0].data.Count+"\n";
+		startOfFile +="%"+(tupleList[0].data.Count+1)+"\n";
 		startOfFile +="%9";
 		for(int i=0;i<tupleList[0].data.Count;i++){
 			startOfFile +="\t1";
