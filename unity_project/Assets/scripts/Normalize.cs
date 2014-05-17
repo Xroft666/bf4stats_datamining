@@ -51,7 +51,7 @@ public class Normalize : MonoBehaviour {
 		for(int i=0;i<t.data.Count;i++){
 			float value = (((t.data[i]-min[i])/(max[i]-min[i]))*(newMax-newMin)+newMin);
 			value = Mathf.Clamp(value,newMin,newMax);
-			value = Mathf.Floor(value * (1/roundToNearest)) / (1/roundToNearest);
+			value = Mathf.Floor(value * (1/t.roundValue[i])) / (1/t.roundValue[i]);
 			t.dataNormalized.Add(value);
 		}
 	}

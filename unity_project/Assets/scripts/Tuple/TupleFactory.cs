@@ -88,37 +88,37 @@ public class TupleFactory : MonoBehaviour {
 
 		t.playerID = int.Parse(pd.player.id);
 
-		t.setData("timePlayed",pd.stats.timePlayed);
-		t.setData("score",pd.player.score);
-		t.setData("kills",pd.stats.kills);
-		t.setData("deaths",pd.stats.deaths);
-		t.setData("shotsFired",pd.stats.shotsFired);
-		t.setData("shotsHit",pd.stats.shotsHit);
-		t.setData("numLosses",pd.stats.numLosses);
-		t.setData("numWins",pd.stats.numWins);
-		t.setData("weaponKills",pd.stats.extra.weaponKills);
-		t.setData("vehicleKills",pd.stats.extra.vehicleKills);
-		t.setData("medals",pd.stats.extra.medals);
-		t.setData("headshots",pd.stats.headshots);
-		t.setData("suppressionAssists",pd.stats.suppressionAssists);
-		t.setData("avengerKills",pd.stats.avengerKills);
-		t.setData("saviorKills",pd.stats.saviorKills);
-		t.setData("nemesisKills",pd.stats.nemesisKills);
-		t.setData("resupplies",pd.stats.resupplies);
-		t.setData("repairs",pd.stats.repairs);
-		t.setData("heals",pd.stats.heals);
-		t.setData("revives",pd.stats.revives);
-		t.setData("killAssists",pd.stats.killAssists);
+		t.setData("timePlayed",pd.stats.timePlayed,0.2f);
+		t.setData("score",pd.player.score,0.2f);
+		t.setData("kills",pd.stats.kills,0.2f);
+		t.setData("deaths",pd.stats.deaths,0.2f);
+		t.setData("shotsFired",pd.stats.shotsFired,0.2f);
+		t.setData("shotsHit",pd.stats.shotsHit,0.2f);
+		t.setData("numLosses",pd.stats.numLosses,0.2f);
+		t.setData("numWins",pd.stats.numWins,0.2f);
+		t.setData("weaponKills",pd.stats.extra.weaponKills,0.2f);
+		t.setData("vehicleKills",pd.stats.extra.vehicleKills,0.2f);
+		t.setData("medals",pd.stats.extra.medals,0.2f);
+		t.setData("headshots",pd.stats.headshots,0.2f);
+		t.setData("suppressionAssists",pd.stats.suppressionAssists,0.2f);
+		t.setData("avengerKills",pd.stats.avengerKills,0.2f);
+		t.setData("saviorKills",pd.stats.saviorKills,0.2f);
+		t.setData("nemesisKills",pd.stats.nemesisKills,0.2f);
+		t.setData("resupplies",pd.stats.resupplies,0.2f);
+		t.setData("repairs",pd.stats.repairs,0.2f);
+		t.setData("heals",pd.stats.heals,0.2f);
+		t.setData("revives",pd.stats.revives,0.2f);
+		t.setData("killAssists",pd.stats.killAssists,0.2f);
 
-		t.setData("kdr",pd.stats.extra.kdr);
-		t.setData("wlr",pd.stats.extra.wlr);
-		t.setData("spm",pd.stats.extra.spm);
-		t.setData("gspm",pd.stats.extra.gspm);
-		t.setData("kpm",pd.stats.extra.kpm);
-		t.setData("sfpm",pd.stats.extra.sfpm);
-		t.setData("hkp",pd.stats.extra.hkp);
-		t.setData("khp",pd.stats.extra.khp);
-		t.setData("accuracy",pd.stats.extra.accuracy);
+		t.setData("kdr",pd.stats.extra.kdr,0.2f);
+		t.setData("wlr",pd.stats.extra.wlr,0.2f);
+		t.setData("spm",pd.stats.extra.spm,0.2f);
+		t.setData("gspm",pd.stats.extra.gspm,0.2f);
+		t.setData("kpm",pd.stats.extra.kpm,0.2f);
+		t.setData("sfpm",pd.stats.extra.sfpm,0.2f);
+		t.setData("hkp",pd.stats.extra.hkp,0.2f);
+		t.setData("khp",pd.stats.extra.khp,0.2f);
+		t.setData("accuracy",pd.stats.extra.accuracy,0.2f);
 
 
 		/*

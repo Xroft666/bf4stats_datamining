@@ -8,6 +8,7 @@ public class Tuple{
 	public List<float> data = new List<float>();
 	public List<string> dataName = new List<string>();
 	public List<float> dataNormalized = new List<float>();
+	public List<float> roundValue = new List<float>();
 	
 	public float getDataFromString(string name){
 		return data[dataName.FindIndex(delegate(string obj) {
@@ -20,8 +21,9 @@ public class Tuple{
 		})];
 	}
 
-	public void setData(string name, float data){
+	public void setData(string name, float data, float roundValue){
 		this.data.Add(data);
 		this.dataName.Add(name);
+		this.roundValue.Add(roundValue);
 	}
 }
