@@ -87,7 +87,7 @@ public class TupleFactory : MonoBehaviour {
 	void FillTuple(Tuple t,PlayerData pd){
 
 		t.playerID = int.Parse(pd.player.id);
-
+		/*
 		t.setData("timePlayed",pd.stats.timePlayed,0.2f);
 		t.setData("score",pd.player.score,0.2f);
 		t.setData("kills",pd.stats.kills,0.2f);
@@ -119,7 +119,7 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("hkp",pd.stats.extra.hkp,0.2f);
 		t.setData("khp",pd.stats.extra.khp,0.2f);
 		t.setData("accuracy",pd.stats.extra.accuracy,0.2f);
-
+		*/
 
 		/*
 		t.setData("playerName",pd.player.name);
@@ -130,6 +130,22 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("flagCaptures",pd.stats.flagCaptures.ToString());
 		t.setData("flagDefend",pd.stats.flagDefend.ToString());
 		*/
+
+		t.setData ("Pilot", pd.stats.extra.vehKillsP);
+		t.setData ("Trooper", pd.stats.extra.weaKillsP);
+		t.setData ("Officer", pd.stats.extra.ribbons +
+		           				pd.stats.extra.medals +
+		           				pd.stats.extra.assignments );
+		t.setData ("AntiArmorTech", pd.stats.vehicleDamage);
+		t.setData ("Assistance", pd.stats.resupplies +
+						pd.stats.repairs +
+						pd.stats.heals +
+						pd.stats.revives);
+		t.setData("TeamPlayer", (pd.stats.avengerKills +
+		          				pd.stats.saviorKills +
+		                         pd.stats.nemesisKills) / pd.stats.kills);
+		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend);
+
 	}
 
 	public PlayerData[] FillPlayerData(string text)
