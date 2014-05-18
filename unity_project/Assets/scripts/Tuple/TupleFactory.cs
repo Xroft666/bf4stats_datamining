@@ -131,20 +131,20 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("flagDefend",pd.stats.flagDefend.ToString());
 		*/
 
-		t.setData ("Pilot", pd.stats.extra.vehKillsP);
-		t.setData ("Trooper", pd.stats.extra.weaKillsP);
+		t.setData ("Pilot", pd.stats.extra.vehKillsP, 0.2f);
+		t.setData ("Trooper", pd.stats.extra.weaKillsP, 0.2f);
 		t.setData ("Officer", pd.stats.extra.ribbons +
 		           				pd.stats.extra.medals +
-		           				pd.stats.extra.assignments );
-		t.setData ("AntiArmorTech", pd.stats.vehicleDamage);
+		           				pd.stats.extra.assignments, 0.2f );
+		t.setData ("AntiArmorTech", pd.stats.vehicleDamage, 0.2f);
 		t.setData ("Assistance", pd.stats.resupplies +
 						pd.stats.repairs +
 						pd.stats.heals +
-						pd.stats.revives);
+		           		pd.stats.revives, 0.2f);
 		t.setData("TeamPlayer", (pd.stats.avengerKills +
 		          				pd.stats.saviorKills +
-		                         pd.stats.nemesisKills) / pd.stats.kills);
-		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend);
+		                         pd.stats.nemesisKills) / pd.stats.kills, 0.2f);
+		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend, 0.2f);
 
 	}
 
