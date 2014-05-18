@@ -91,40 +91,42 @@ public class TupleFactory : MonoBehaviour {
 		t.playerID = int.Parse(pd.player.id);
 
 		float time = pd.stats.timePlayed;
+		float kills = pd.stats.kills;
+		float rounding = 0.1f;
 		// EVERYTHING
 
 		//-------------General perfomance stats in a ratio based on time
-		t.setData("timePlayed",pd.stats.timePlayed,0.2f);
-		t.setData("score",pd.player.score/time,0.2f);
-		t.setData("kills",pd.stats.kills/time,0.2f);
-		t.setData("deaths",pd.stats.deaths/time,0.2f);
-		t.setData("shotsFired",pd.stats.shotsFired/time,0.2f);
-		t.setData("shotsHit",pd.stats.shotsHit/time,0.2f);
-		t.setData("numLosses",pd.stats.numLosses/time,0.2f);
-		t.setData("numWins",pd.stats.numWins/time,0.2f);
-		t.setData("weaponKills",pd.stats.extra.weaponKills/time,0.2f);
-		t.setData("vehicleKills",pd.stats.extra.vehicleKills/time,0.2f);
-		t.setData("medals",pd.stats.extra.medals/time,0.2f);
-		t.setData("headshots",pd.stats.headshots/time,0.2f);
-		t.setData("suppressionAssists",pd.stats.suppressionAssists/time,0.2f);
-		t.setData("avengerKills",pd.stats.avengerKills/time,0.2f);
-		t.setData("saviorKills",pd.stats.saviorKills/time,0.2f);
-		t.setData("nemesisKills",pd.stats.nemesisKills/time,0.2f);
-		t.setData("resupplies",pd.stats.resupplies/time,0.2f);
-		t.setData("repairs",pd.stats.repairs/time,0.2f);
-		t.setData("heals",pd.stats.heals/time,0.2f);
-		t.setData("revives",pd.stats.revives/time,0.2f);
-		t.setData("killAssists",pd.stats.killAssists/time,0.2f);
+		t.setData("timePlayed",pd.stats.timePlayed,rounding);
+		t.setData("score",pd.player.score/time,rounding);
+		t.setData("kills",pd.stats.kills/time,rounding);
+		t.setData("deaths",pd.stats.deaths/time,rounding);
+		t.setData("shotsFired",pd.stats.shotsFired/time,rounding);
+		t.setData("shotsHit",pd.stats.shotsHit/time,rounding);
+		t.setData("numLosses",pd.stats.numLosses/time,rounding);
+		t.setData("numWins",pd.stats.numWins/time,rounding);
+		t.setData("weaponKills",pd.stats.extra.weaponKills/kills,rounding);
+		t.setData("vehicleKills",pd.stats.extra.vehicleKills/kills,rounding);
+		t.setData("medals",pd.stats.extra.medals/time,rounding);
+		t.setData("headshots",pd.stats.headshots/kills,rounding);
+		t.setData("suppressionAssists",pd.stats.suppressionAssists/time,rounding);
+		t.setData("avengerKills",pd.stats.avengerKills/kills,rounding);
+		t.setData("saviorKills",pd.stats.saviorKills/kills,rounding);
+		t.setData("nemesisKills",pd.stats.nemesisKills/kills,rounding);
+		t.setData("resupplies",pd.stats.resupplies/time,rounding);
+		t.setData("repairs",pd.stats.repairs/time,rounding);
+		t.setData("heals",pd.stats.heals/time,rounding);
+		t.setData("revives",pd.stats.revives/time,rounding);
+		t.setData("killAssists",pd.stats.killAssists/time,rounding);
 
-		t.setData("kdr",pd.stats.extra.kdr,0.2f);
-		t.setData("wlr",pd.stats.extra.wlr,0.2f);
-		t.setData("spm",pd.stats.extra.spm,0.2f);
-		t.setData("gspm",pd.stats.extra.gspm,0.2f);
-		t.setData("kpm",pd.stats.extra.kpm,0.2f);
-		t.setData("sfpm",pd.stats.extra.sfpm,0.2f);
-		t.setData("hkp",pd.stats.extra.hkp,0.2f);
-		t.setData("khp",pd.stats.extra.khp,0.2f);
-		t.setData("accuracy",pd.stats.extra.accuracy,0.2f);
+		t.setData("kdr",pd.stats.extra.kdr,rounding);
+		t.setData("wlr",pd.stats.extra.wlr,rounding);
+		t.setData("spm",pd.stats.extra.spm,rounding);
+		t.setData("gspm",pd.stats.extra.gspm,rounding);
+		t.setData("kpm",pd.stats.extra.kpm,rounding);
+		t.setData("sfpm",pd.stats.extra.sfpm,rounding);
+		t.setData("hkp",pd.stats.extra.hkp,rounding);
+		t.setData("khp",pd.stats.extra.khp,rounding);
+		t.setData("accuracy",pd.stats.extra.accuracy,rounding);
 
 
 		/*//----------------- attempt to extract best guns
