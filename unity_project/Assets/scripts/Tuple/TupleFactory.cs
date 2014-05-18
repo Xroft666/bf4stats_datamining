@@ -125,7 +125,7 @@ public class TupleFactory : MonoBehaviour {
 
 
 		// BEHAVIOUR CLASSIFICATION
-		/*
+
 		t.setData ("Pilot", pd.stats.extra.vehKillsP, 0.2f);
 		t.setData ("Trooper", pd.stats.extra.weaKillsP, 0.2f);
 		t.setData ("Officer", pd.stats.extra.ribbons +
@@ -140,17 +140,17 @@ public class TupleFactory : MonoBehaviour {
 		          				pd.stats.saviorKills +
 		                         pd.stats.nemesisKills) / (float) pd.stats.kills, 0.2f);
 		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend, 0.2f);
-		*/
+
 
 		// WEAPON SUGGESTION
 
-		foreach( PlayerData.Kititem kitItem in pd.kititems )
-			foreach( PlayerData.Weapon weapon in pd.weapons )
-			{
-				t.setData ("Kit class", System.Convert.ToInt32(kitItem.detail.id), 0.2f);
-				t.setData ("Weapon", System.Convert.ToInt32(weapon.detail.id), 0.2f);
-				t.setData ("Kills per Minute", weapon.extra.kpm, 0.2f);
-			}
+//		foreach( PlayerData.Kititem kitItem in pd.kititems )
+//			foreach( PlayerData.Weapon weapon in pd.weapons )
+//			{
+//				t.setData ("Kit class", System.Convert.ToInt32(kitItem.detail.id), 0.2f);
+//				t.setData ("Weapon", System.Convert.ToInt32(weapon.detail.id), 0.2f);
+//				t.setData ("Kills per Minute", weapon.extra.kpm, 0.2f);
+//			}
 	}
 
 	public PlayerData[] FillPlayerData(string text)
