@@ -39,7 +39,7 @@ public class bf4stats : MonoBehaviour
 
 
 			
-
+	private int downloadCounter = 0;
 
 	private List<string> playerNames = new List<string>(); 
 
@@ -63,7 +63,7 @@ public class bf4stats : MonoBehaviour
 	void Awake()
 	{
 		instance = this;
-
+		filepath = Application.dataPath;
 	}
 
 	void LoadFilesFromHarddrive(){
@@ -144,13 +144,15 @@ public class bf4stats : MonoBehaviour
 						playerNames.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
 	            	}
 
-					foreach(string nome in playerNames)
-					{
-						//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt", nome + "\n");
-						yield return StartCoroutine(RetrivePlayerInfo(nome));
-					//print (output);
+					yield return StartCoroutine(DownloadPlayers(playerNames));
 
-					}
+					//foreach(string nome in playerNames)
+					//{
+					//	//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt", nome + "\n");
+					//	/*yield return */StartCoroutine(RetrivePlayerInfo(nome));
+					////print (output);
+					//
+					//}
 					print("------------------writing to file----------------------");
 					File.AppendAllText(filepath+"/bf4output_page"+currentPage+".txt", output);
 
@@ -168,6 +170,18 @@ public class bf4stats : MonoBehaviour
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 		print ("" + numPlayersDownloaded + " names crawled in: " + Time.time + " seconds.");
     }
+
+	IEnumerator DownloadPlayers(List<string> playerNames)
+	{
+		downloadCounter = 0;
+		foreach(string nome in playerNames)
+		{
+			StartCoroutine(RetrivePlayerInfo(nome));
+		}
+
+		while (downloadCounter < 50)
+			yield return null;
+	}
 
 	IEnumerator RetrivePlayerInfo(string name)
 	{
@@ -221,6 +235,7 @@ public class bf4stats : MonoBehaviour
 				numPlayersDownloaded++;
 				print ("Done. "+numPlayersDownloaded+" Players downloaded.");
 				SoundReference.instance.PlaySound(SoundReference.instance.SmallProgress);
+				downloadCounter++;
 				//Debug.ClearDeveloperConsole();
 			}else{
 				print("Connection timeout, retrying player "+name);
