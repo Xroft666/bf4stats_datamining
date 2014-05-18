@@ -162,7 +162,7 @@ public class TupleFactory : MonoBehaviour {
 		string toWrite = JsonConvert.SerializeObject(tupleList);
 		Directory.CreateDirectory(Application.dataPath+"/Data/Tuples/");
 		File.WriteAllText(Application.dataPath+"/Data/Tuples/"+fileName+".txt",toWrite);
-		tupleList = new List<Tuple>();
+		//tupleList = new List<Tuple>();
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 		print("Done saving tuples");
 	}

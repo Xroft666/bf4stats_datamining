@@ -63,7 +63,7 @@ public class bf4stats : MonoBehaviour
 	void Awake()
 	{
 		instance = this;
-		filepath = Application.dataPath;
+		//filepath = Application.dataPath;
 	}
 
 	void LoadFilesFromHarddrive(){
@@ -124,41 +124,59 @@ public class bf4stats : MonoBehaviour
         for( int i = 0; i < endPage-startPage; i++ )
 		{
 			currentPage = startPage+i;
-			print("starting downloading page "+currentPage);
 			if(!File.Exists(filepath+"/bf4output_page"+currentPage+".txt") || OverwriteExistingFiles)
 			{
-				using (WWW www = new WWW(leaderboardURI + currentPage) )
+				using (WWW www = new WWW(leaderboardURI + (currentPage*50)) )
 				{
 					// extracting the html page
-	                yield return www;
-					
-					int startIndex = 0;
-					playerNames.Clear();
-					while( (startIndex = www.text.IndexOf(nameLineStart, startIndex)) != -1 )
-					{
-						// gettin to the start of name
-						startIndex = www.text.IndexOf("\">", startIndex);
-						// getting to the end of name
-						int endIndex = www.text.IndexOf(nameLineEnd, startIndex);
-						// extracting the name
-						playerNames.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
-	            	}
+					while(true){
+						print("starting downloading page "+currentPage);
+						//print("Trying to download page");
 
-					yield return StartCoroutine(DownloadPlayers(playerNames));
+						yield return www;
+						if(www.error == null){
+							break;
+						}else{
+							yield return new WaitForEndOfFrame();
+							Debug.LogWarning("Error downloading page, retrying ");
+							break;
+						}
+					}
 
-					//foreach(string nome in playerNames)
-					//{
-					//	//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt", nome + "\n");
-					//	/*yield return */StartCoroutine(RetrivePlayerInfo(nome));
-					////print (output);
-					//
-					//}
-					print("------------------writing to file----------------------");
-					File.AppendAllText(filepath+"/bf4output_page"+currentPage+".txt", output);
 
-					output = "";
-					print("completed downloading page "+currentPage);
-					SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
+					print("retrived list of players for page "+currentPage);
+					if(www.error == null){
+
+						int startIndex = 0;
+						playerNames.Clear();
+						while( (startIndex = www.text.IndexOf(nameLineStart, startIndex)) != -1 )
+						{
+							// gettin to the start of name
+							startIndex = www.text.IndexOf("\">", startIndex);
+							// getting to the end of name
+							int endIndex = www.text.IndexOf(nameLineEnd, startIndex);
+							// extracting the name
+							playerNames.Add( www.text.Substring(startIndex + 2, endIndex - startIndex - 2) );
+		            	}
+
+						yield return StartCoroutine(DownloadPlayers(playerNames));
+
+						//foreach(string nome in playerNames)
+						//{
+						//	//File.AppendAllText("C:/Users/Zazà/Desktop/ITU/04_Data Mining/0bf4output.txt", nome + "\n");
+						//	/*yield return */StartCoroutine(RetrivePlayerInfo(nome));
+						////print (output);
+						//
+						//}
+						print("------------------writing to file----------------------");
+						File.AppendAllText(filepath+"/bf4output_page"+currentPage+".txt", output);
+
+						output = "";
+						print("completed downloading page "+currentPage);
+						SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
+					}else{
+						Debug.LogError("ERROR on page download "+currentPage);
+					}
 				}
 			}else{
 				print("this page allready exists!");
@@ -209,7 +227,7 @@ public class bf4stats : MonoBehaviour
 		if(urls) optParams+= "urls,";
 
 
-		print ("Retriving player info on " + name + "...");
+		//print ("Retriving player info on " + name + "...");
 
 		using (WWW www = new WWW(playerInfoURI + name + outputFormat + optParams.Substring(0, optParams.Length-1) ) )
 		{
@@ -233,14 +251,18 @@ public class bf4stats : MonoBehaviour
 			if(www.error == null){
 				output += www.text;
 				numPlayersDownloaded++;
-				print ("Done. "+numPlayersDownloaded+" Players downloaded.");
+				//print ("Done. "+numPlayersDownloaded+" Players downloaded.");
 				SoundReference.instance.PlaySound(SoundReference.instance.SmallProgress);
 				downloadCounter++;
 				//Debug.ClearDeveloperConsole();
 			}else{
-				print("Connection timeout, retrying player "+name);
-				Debug.LogWarning("WARNING: Unstable Connection");
-				RetrivePlayerInfo(name);
+				if(name != "undefined"){
+					//print("Connection timeout, retrying player "+name);
+					Debug.LogWarning("WARNING: Unstable Connection");
+					StartCoroutine( RetrivePlayerInfo(name));
+				}else{
+					downloadCounter++;
+				}
 			}
 
 
@@ -278,7 +300,7 @@ public class bf4stats : MonoBehaviour
 			//---------FILLS MEMORY ON BIG DOWNLOAD-------
 		
 		}
-		print("Added "+i+" players");
+		//print("Added "+i+" players");
 
 		Debug.Log("finished reading file");
 	}
