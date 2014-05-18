@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
 using System;
+using System.Linq;
 using Newtonsoft.Json;
 
 public class TupleFactory : MonoBehaviour {
@@ -67,7 +68,8 @@ public class TupleFactory : MonoBehaviour {
 					FillTuple(tuple,playersData[j]);
 					tupleList.Add(tuple);
 				}
-
+				playersData = null;
+				GC.Collect();
 				print("created tuples from file "+currentPage);
 				SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
 				yield return new WaitForEndOfFrame();
@@ -88,29 +90,31 @@ public class TupleFactory : MonoBehaviour {
 
 		t.playerID = int.Parse(pd.player.id);
 
+		float time = pd.stats.timePlayed;
 		// EVERYTHING
-		/*
+
+		//-------------General perfomance stats in a ratio based on time
 		t.setData("timePlayed",pd.stats.timePlayed,0.2f);
-		t.setData("score",pd.player.score,0.2f);
-		t.setData("kills",pd.stats.kills,0.2f);
-		t.setData("deaths",pd.stats.deaths,0.2f);
-		t.setData("shotsFired",pd.stats.shotsFired,0.2f);
-		t.setData("shotsHit",pd.stats.shotsHit,0.2f);
-		t.setData("numLosses",pd.stats.numLosses,0.2f);
-		t.setData("numWins",pd.stats.numWins,0.2f);
-		t.setData("weaponKills",pd.stats.extra.weaponKills,0.2f);
-		t.setData("vehicleKills",pd.stats.extra.vehicleKills,0.2f);
-		t.setData("medals",pd.stats.extra.medals,0.2f);
-		t.setData("headshots",pd.stats.headshots,0.2f);
-		t.setData("suppressionAssists",pd.stats.suppressionAssists,0.2f);
-		t.setData("avengerKills",pd.stats.avengerKills,0.2f);
-		t.setData("saviorKills",pd.stats.saviorKills,0.2f);
-		t.setData("nemesisKills",pd.stats.nemesisKills,0.2f);
-		t.setData("resupplies",pd.stats.resupplies,0.2f);
-		t.setData("repairs",pd.stats.repairs,0.2f);
-		t.setData("heals",pd.stats.heals,0.2f);
-		t.setData("revives",pd.stats.revives,0.2f);
-		t.setData("killAssists",pd.stats.killAssists,0.2f);
+		t.setData("score",pd.player.score/time,0.2f);
+		t.setData("kills",pd.stats.kills/time,0.2f);
+		t.setData("deaths",pd.stats.deaths/time,0.2f);
+		t.setData("shotsFired",pd.stats.shotsFired/time,0.2f);
+		t.setData("shotsHit",pd.stats.shotsHit/time,0.2f);
+		t.setData("numLosses",pd.stats.numLosses/time,0.2f);
+		t.setData("numWins",pd.stats.numWins/time,0.2f);
+		t.setData("weaponKills",pd.stats.extra.weaponKills/time,0.2f);
+		t.setData("vehicleKills",pd.stats.extra.vehicleKills/time,0.2f);
+		t.setData("medals",pd.stats.extra.medals/time,0.2f);
+		t.setData("headshots",pd.stats.headshots/time,0.2f);
+		t.setData("suppressionAssists",pd.stats.suppressionAssists/time,0.2f);
+		t.setData("avengerKills",pd.stats.avengerKills/time,0.2f);
+		t.setData("saviorKills",pd.stats.saviorKills/time,0.2f);
+		t.setData("nemesisKills",pd.stats.nemesisKills/time,0.2f);
+		t.setData("resupplies",pd.stats.resupplies/time,0.2f);
+		t.setData("repairs",pd.stats.repairs/time,0.2f);
+		t.setData("heals",pd.stats.heals/time,0.2f);
+		t.setData("revives",pd.stats.revives/time,0.2f);
+		t.setData("killAssists",pd.stats.killAssists/time,0.2f);
 
 		t.setData("kdr",pd.stats.extra.kdr,0.2f);
 		t.setData("wlr",pd.stats.extra.wlr,0.2f);
@@ -121,6 +125,19 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("hkp",pd.stats.extra.hkp,0.2f);
 		t.setData("khp",pd.stats.extra.khp,0.2f);
 		t.setData("accuracy",pd.stats.extra.accuracy,0.2f);
+
+
+		/*//----------------- attempt to extract best guns
+		List<PlayerData.Weapon.Stat> topWep = new List<PlayerData.Weapon.Stat>();
+		for(int i=0;i< pd.weapons.Length;i++){
+			topWep.Add(pd.weapons[i].stat);
+		}
+		topWep.OrderByDescending(x=>x.kills);
+		t.setData("gun_"+0,float.Parse(topWep[0].id),0.2f);
+		t.setData("gun_"+1,float.Parse(topWep[1].id),0.2f);
+		t.setData("gun_"+2,float.Parse(topWep[2].id),0.2f);
+		t.setData("gun_"+3,float.Parse(topWep[3].id),0.2f);
+		t.setData("gun_"+4,float.Parse(topWep[4].id),0.2f);
 		*/
 
 
@@ -143,7 +160,7 @@ public class TupleFactory : MonoBehaviour {
 		*/
 
 		// WEAPON SUGGESTION
-
+		/*
 		foreach( PlayerData.Kititem kitItem in pd.kititems )
 			foreach( PlayerData.Weapon weapon in pd.weapons )
 			{
@@ -151,6 +168,7 @@ public class TupleFactory : MonoBehaviour {
 				t.setData ("Weapon", System.Convert.ToInt32(weapon.detail.id), 0.2f);
 				t.setData ("Kills per Minute", weapon.extra.kpm, 0.2f);
 			}
+			*/
 	}
 
 	public PlayerData[] FillPlayerData(string text)
