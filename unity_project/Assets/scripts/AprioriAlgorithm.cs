@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,18 +11,27 @@ public class Apriori
 {
 	public static List<ItemSet> lastRunSet;
 
+	public static StreamWriter writer;
+
 	public static IEnumerator apriori( Tuple[] transactions, int supportThreshold ) 
 	{
+		FileStream debugStream = File.Open(Application.dataPath + "/Logs/log.txt", FileMode.CreateNew);
+		writer = new StreamWriter(debugStream);
+		writer.WriteLine("starting aPriori at " + System.DateTime.Now);
+
 		List<ItemSet> ret = new List<ItemSet>(); 
 		int k;
 		Dictionary<ItemSet, int> frequentItemSets = generateFrequentItemSetsLevel1( transactions, supportThreshold );
 		Debug.Log("level 1 done");
+		writer.WriteLine("level 1 done at " + System.DateTime.Now);
 		SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
 		yield return new WaitForEndOfFrame();
 		
 		// searches for frequent patterns of dim k, until no frequent patterns for current k found
 		for (k = 1; frequentItemSets.Count > 0; k++) {
-			Debug.Log( "Finding frequent itemsets of length " + (k + 1) + "…" );
+			Debug.Log("Finding frequent itemsets of length " + (k + 1) + "…");
+			writer.WriteLine("Finding frequent itemsets of length " + (k + 1) + "… at " + System.DateTime.Now);
+
 			frequentItemSets = generateFrequentItemSets( supportThreshold, transactions, frequentItemSets );
 			foreach(ItemSet set in frequentItemSets.Keys)
 			{
@@ -29,14 +39,22 @@ public class Apriori
 			}
 			
 			Debug.Log( " found " + frequentItemSets.Count );
+			writer.WriteLine(" found " + frequentItemSets.Count);
+
 			foreach(ItemSet i in frequentItemSets.Keys)
-				Debug.Log(Normalize.instance.PrintUnfactorizedData(i.set));
+			{
+				string s = Normalize.instance.PrintUnfactorizedData(i.set);
+				Debug.Log(s);
+				writer.WriteLine(s);
+			}
 
 			SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
 			yield return new WaitForEndOfFrame();
 		}
 		
 		lastRunSet = ret;
+
+		writer.Close();
 	}
 	
 	/**
@@ -85,7 +103,10 @@ public class Apriori
      * try to join first and second. succeeds if first and second are equal until the 2nd-last position,
      * with the last being smaller at first. otherwise returns null.
      */
-	private static ItemSet joinSets( ItemSet first, ItemSet second ) {
+	private static ItemSet joinSets( ItemSet first, ItemSet second ) 
+	{
+		writer.WriteLine("try to join sets " + first.ToString() + ", " + second.ToString());
+
 		ItemSet ret = null;
 		
 		if(first.set.Length != second.set.Length)
