@@ -136,9 +136,9 @@ public class TupleFactory : MonoBehaviour {
 						pd.stats.repairs +
 						pd.stats.heals +
 		           		pd.stats.revives, 0.2f);
-		t.setData("TeamPlayer", (pd.stats.avengerKills +
+		t.setData("TeamPlayer", (float)(pd.stats.avengerKills +
 		          				pd.stats.saviorKills +
-		                         pd.stats.nemesisKills) / pd.stats.kills, 0.2f);
+		                         pd.stats.nemesisKills) / (float) pd.stats.kills, 0.2f);
 		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend, 0.2f);
 		*/
 

@@ -42,7 +42,7 @@ public class CreateLearningData : MonoBehaviour {
 
 		startOfFile +="%Key";
 		for(int i=0;i<tupleList[0].data.Count;i++){
-			startOfFile +="\t"+(i+1).ToString();
+			startOfFile +="\t"+(tupleList[0].dataName[i]).ToString();
 		}
 		startOfFile += "\n";
 		//startOfFile +="%Key\t1\t2\t3\t4\n";
