@@ -88,6 +88,8 @@ public class TupleFactory : MonoBehaviour {
 
 		t.playerID = int.Parse(pd.player.id);
 
+		// EVERYTHING
+		/*
 		t.setData("timePlayed",pd.stats.timePlayed,0.2f);
 		t.setData("score",pd.player.score,0.2f);
 		t.setData("kills",pd.stats.kills,0.2f);
@@ -119,17 +121,36 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("hkp",pd.stats.extra.hkp,0.2f);
 		t.setData("khp",pd.stats.extra.khp,0.2f);
 		t.setData("accuracy",pd.stats.extra.accuracy,0.2f);
-
-
-		/*
-		t.setData("playerName",pd.player.name);
-		t.setData("kills",pd.stats.kills.ToString());
-		t.setData("headshots",pd.stats.headshots.ToString());
-		t.setData("deaths",pd.stats.deaths.ToString());
-		t.setData("dogtagsTaken",pd.stats.dogtagsTaken.ToString());
-		t.setData("flagCaptures",pd.stats.flagCaptures.ToString());
-		t.setData("flagDefend",pd.stats.flagDefend.ToString());
 		*/
+
+
+		// BEHAVIOUR CLASSIFICATION
+		/*
+		t.setData ("Pilot", pd.stats.extra.vehKillsP, 0.2f);
+		t.setData ("Trooper", pd.stats.extra.weaKillsP, 0.2f);
+		t.setData ("Officer", pd.stats.extra.ribbons +
+		           				pd.stats.extra.medals +
+		           				pd.stats.extra.assignments, 0.2f );
+		t.setData ("AntiArmorTech", pd.stats.vehicleDamage, 0.2f);
+		t.setData ("Assistance", pd.stats.resupplies +
+						pd.stats.repairs +
+						pd.stats.heals +
+		           		pd.stats.revives, 0.2f);
+		t.setData("TeamPlayer", (float)(pd.stats.avengerKills +
+		          				pd.stats.saviorKills +
+		                         pd.stats.nemesisKills) / (float) pd.stats.kills, 0.2f);
+		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend, 0.2f);
+		*/
+
+		// WEAPON SUGGESTION
+
+		foreach( PlayerData.Kititem kitItem in pd.kititems )
+			foreach( PlayerData.Weapon weapon in pd.weapons )
+			{
+				t.setData ("Kit class", System.Convert.ToInt32(kitItem.detail.id), 0.2f);
+				t.setData ("Weapon", System.Convert.ToInt32(weapon.detail.id), 0.2f);
+				t.setData ("Kills per Minute", weapon.extra.kpm, 0.2f);
+			}
 	}
 
 	public PlayerData[] FillPlayerData(string text)

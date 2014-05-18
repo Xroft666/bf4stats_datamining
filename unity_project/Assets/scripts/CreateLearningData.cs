@@ -42,7 +42,7 @@ public class CreateLearningData : MonoBehaviour {
 
 		startOfFile +="%Key";
 		for(int i=0;i<tupleList[0].data.Count;i++){
-			startOfFile +="\t"+(i+1).ToString();
+			startOfFile +="\t"+(tupleList[0].dataName[i]).ToString();
 		}
 		startOfFile += "\n";
 		//startOfFile +="%Key\t1\t2\t3\t4\n";
@@ -52,7 +52,7 @@ public class CreateLearningData : MonoBehaviour {
 			string line = "";
 			line += tupleList[i].playerID.ToString();
 			for(int j=0;j<tupleList[i].data.Count;j++){
-				line += "\t" + tupleList[i].dataNormalized[j].ToString(); 
+				line += "\t" + tupleList[i].data[j].ToString(); 
 			}
 			line += "\n";
 			File.AppendAllText(Application.dataPath + "/Data/LearningData/"+outputFileName+".lrn", line);
