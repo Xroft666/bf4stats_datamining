@@ -87,6 +87,8 @@ public class TupleFactory : MonoBehaviour {
 	void FillTuple(Tuple t,PlayerData pd){
 
 		t.playerID = int.Parse(pd.player.id);
+
+		// EVERYTHING
 		/*
 		t.setData("timePlayed",pd.stats.timePlayed,0.2f);
 		t.setData("score",pd.player.score,0.2f);
@@ -121,16 +123,9 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("accuracy",pd.stats.extra.accuracy,0.2f);
 		*/
 
-		/*
-		t.setData("playerName",pd.player.name);
-		t.setData("kills",pd.stats.kills.ToString());
-		t.setData("headshots",pd.stats.headshots.ToString());
-		t.setData("deaths",pd.stats.deaths.ToString());
-		t.setData("dogtagsTaken",pd.stats.dogtagsTaken.ToString());
-		t.setData("flagCaptures",pd.stats.flagCaptures.ToString());
-		t.setData("flagDefend",pd.stats.flagDefend.ToString());
-		*/
 
+		// BEHAVIOUR CLASSIFICATION
+		/*
 		t.setData ("Pilot", pd.stats.extra.vehKillsP, 0.2f);
 		t.setData ("Trooper", pd.stats.extra.weaKillsP, 0.2f);
 		t.setData ("Officer", pd.stats.extra.ribbons +
@@ -145,7 +140,17 @@ public class TupleFactory : MonoBehaviour {
 		          				pd.stats.saviorKills +
 		                         pd.stats.nemesisKills) / pd.stats.kills, 0.2f);
 		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend, 0.2f);
+		*/
 
+		// WEAPON SUGGESTION
+
+		foreach( PlayerData.Kititem kitItem in pd.kititems )
+			foreach( PlayerData.Weapon weapon in pd.weapons )
+			{
+				t.setData ("Kit class", System.Convert.ToInt32(kitItem.detail.id), 0.2f);
+				t.setData ("Weapon", System.Convert.ToInt32(weapon.detail.id), 0.2f);
+				t.setData ("Kills per Minute", weapon.extra.kpm, 0.2f);
+			}
 	}
 
 	public PlayerData[] FillPlayerData(string text)
