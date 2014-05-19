@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 /**
  * performs the a-Priori algorithm on the transactions dataset with a given minimum supportThreshold.
@@ -67,6 +68,9 @@ public class Apriori
 		lastRunSet = ret;
 
 		writer.Close();
+		string toWrite = JsonConvert.SerializeObject(bf4stats.instance.aPrioriResults);
+	    Directory.CreateDirectory(Application.dataPath+"/Data/LogAsJson/");
+		File.WriteAllText(Application.dataPath+"/Data/LogAsJson/"+"aprioriResult"+".txt",toWrite);
 	}
 	
 	/**
@@ -117,7 +121,7 @@ public class Apriori
      */
 	private static ItemSet joinSets( ItemSet first, ItemSet second ) 
 	{
-		writer.WriteLine("try to join sets " + first.ToString() + ", " + second.ToString());
+		//writer.WriteLine("try to join sets " + first.ToString() + ", " + second.ToString());
 
 		ItemSet ret = null;
 		
