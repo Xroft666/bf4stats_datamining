@@ -72,6 +72,7 @@ public class TupleFactory : MonoBehaviour {
 		// EVERYTHING
 
 		//-------------General perfomance stats in a ratio based on time
+		//------------Used for apriori
 		t.setData("timePlayed",pd.stats.timePlayed,rounding);
 		t.setData("score",pd.player.score/time,rounding);
 		t.setData("kills",pd.stats.kills/time,rounding);
@@ -81,17 +82,17 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("numLosses",pd.stats.numLosses/rounds,rounding);
 		t.setData("numWins",pd.stats.numWins/rounds,rounding);
 		t.setData("weaponKills",pd.stats.extra.weaponKills/kills,rounding);
-		t.setData("vehicleKills",pd.stats.extra.vehicleKills/kills,rounding);
+		t.setData("vehicleKills",pd.stats.extra.vehicleKills/kills,rounding);  
 		t.setData("medals",pd.stats.extra.medals/time,rounding);
 		t.setData("headshots",pd.stats.headshots/kills,rounding);
 		t.setData("suppressionAssists",pd.stats.suppressionAssists/time,rounding);
 		t.setData("avengerKills",pd.stats.avengerKills/kills,rounding);
 		t.setData("saviorKills",pd.stats.saviorKills/kills,rounding);
-		t.setData("nemesisKills",pd.stats.nemesisKills/kills,rounding);
-		t.setData("resupplies",pd.stats.resupplies/score,rounding);
-		t.setData("repairs",pd.stats.repairs/score,rounding);
-		t.setData("heals",pd.stats.heals/score,rounding);
-		t.setData("revives",pd.stats.revives/score,rounding);
+		t.setData("nemesisKills",Mathf.Clamp(pd.stats.nemesisKills/kills,0,0.1f),rounding);	//0.1
+		t.setData("resupplies",Mathf.Clamp(pd.stats.resupplies/score,0,0.002f),rounding);		//0.002
+		t.setData("repairs",Mathf.Clamp(pd.stats.repairs/score,0,0.0005f),rounding);			//0.0005
+		t.setData("heals",Mathf.Clamp(pd.stats.heals/score,0,0.005f),rounding);				//0.005
+		t.setData("revives",Mathf.Clamp(pd.stats.revives/score,0,0.0005f),rounding);			//0.0005
 		t.setData("killAssists",pd.stats.killAssists/score,rounding);
 
 		t.setData("kdr",Mathf.Clamp(pd.stats.extra.kdr,0f,5f),rounding); //clamp 5
@@ -192,14 +193,14 @@ public class TupleFactory : MonoBehaviour {
 		t = JsonConvert.DeserializeObject<List<Tuple>>(s);
 		tupleList = t;
 		print("Done loading file");
-		DoPrint();
+		//DoPrint();
 		//Normalize.instance.StartNormailzation(t.ToArray());
 
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 	}
 
 	void DoPrint(){
-		int index = tupleList[0].getIndexOfProperti("killAssists");
+		int index = tupleList[0].getIndexOfProperti("revives");
 		float max = -Mathf.Infinity;
 
 		float[] numZero = new float[tupleList[0].data.Count];
@@ -220,7 +221,7 @@ public class TupleFactory : MonoBehaviour {
 			print(tupleList[0].dataName[i]+"   "+numZero[i]);
 		}
 
-		print("MAX for this value is "+max);
+		//print("MAX for this value is "+max);
 	}
 
 	public void NormalizeTupleFile(){
