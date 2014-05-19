@@ -40,9 +40,11 @@ public class Normalize : MonoBehaviour {
 			}
 		}
 
+		for(int i=0; i<t.Length; i++)
+			t[i].dataNormalized.Clear();
 		
 		// z-score normalization
-		List<float> dataColumn = new List<float>();
+		/*List<float> dataColumn = new List<float>();
 		for(int x=0; x<t[0].data.Count; x++)
 		{
 			// convert to columns
@@ -57,11 +59,11 @@ public class Normalize : MonoBehaviour {
 			// reconvert to rows
 			for(int y=0; y<t.Length; y++)
 			{
-				t[y].dataNormalized[x] = dataColumn[y];
+				t[y].dataNormalized.Add(dataColumn[y]);
 			}
-		}
+		}*/
 
-		// minmax normalization
+		// min-max normalization
 		foreach(Tuple tu in t){
 			MinMaxNormalize(tu);
 		}
