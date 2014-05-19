@@ -81,17 +81,17 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("numLosses",pd.stats.numLosses/rounds,rounding);
 		t.setData("numWins",pd.stats.numWins/rounds,rounding);
 		t.setData("weaponKills",pd.stats.extra.weaponKills/kills,rounding);
-		t.setData("vehicleKills",pd.stats.extra.vehicleKills/kills,rounding);
+		t.setData("vehicleKills",pd.stats.extra.vehicleKills/kills,rounding);  
 		t.setData("medals",pd.stats.extra.medals/time,rounding);
 		t.setData("headshots",pd.stats.headshots/kills,rounding);
 		t.setData("suppressionAssists",pd.stats.suppressionAssists/time,rounding);
 		t.setData("avengerKills",pd.stats.avengerKills/kills,rounding);
 		t.setData("saviorKills",pd.stats.saviorKills/kills,rounding);
-		t.setData("nemesisKills",pd.stats.nemesisKills/kills,rounding);
-		t.setData("resupplies",pd.stats.resupplies/score,rounding);
-		t.setData("repairs",pd.stats.repairs/score,rounding);
-		t.setData("heals",pd.stats.heals/score,rounding);
-		t.setData("revives",pd.stats.revives/score,rounding);
+		t.setData("nemesisKills",pd.stats.nemesisKills/kills,rounding);	//0.1
+		t.setData("resupplies",pd.stats.resupplies/score,rounding);		//0.002
+		t.setData("repairs",pd.stats.repairs/score,rounding);			//0.0005
+		t.setData("heals",pd.stats.heals/score,rounding);				//0.005
+		t.setData("revives",pd.stats.revives/score,rounding);			//0.0005
 		t.setData("killAssists",pd.stats.killAssists/score,rounding);
 
 		t.setData("kdr",pd.stats.extra.kdr,rounding); //clamp 5
@@ -192,14 +192,14 @@ public class TupleFactory : MonoBehaviour {
 		t = JsonConvert.DeserializeObject<List<Tuple>>(s);
 		tupleList = t;
 		print("Done loading file");
-		//DoPrint();
+		DoPrint();
 		//Normalize.instance.StartNormailzation(t.ToArray());
 
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 	}
 
 	void DoPrint(){
-		int index = tupleList[0].getIndexOfProperti("killAssists");
+		int index = tupleList[0].getIndexOfProperti("revives");
 		float max = -Mathf.Infinity;
 
 		float[] numZero = new float[tupleList[0].data.Count];
@@ -210,14 +210,14 @@ public class TupleFactory : MonoBehaviour {
 					numZero[i]++;
 				}
 			}
-			//print(t.dataName[index]+"    "+t.data[index]+"    "+t.dataNormalized[index]);
+			print(t.dataName[index]+"    "+t.data[index]+"    "+t.dataNormalized[index]);
 			if(t.data[index] > max){
 				max = t.data[index];
 			}
 		}
 
 		for(int i=0;i<numZero.Length;i++){
-			print(tupleList[0].dataName[i]+"   "+numZero[i]);
+			//print(tupleList[0].dataName[i]+"   "+numZero[i]);
 		}
 
 		print("MAX for this value is "+max);
