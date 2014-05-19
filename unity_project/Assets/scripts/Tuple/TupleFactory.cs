@@ -22,32 +22,6 @@ public class TupleFactory : MonoBehaviour {
 
 	public List<Tuple> tupleList = new List<Tuple>();
 
-	/*
-	public IncludeData includeData;
-
-	[System.Serializable]
-	public class IncludeData{
-
-	// include the following data
-	public bool imagePaths = true;
-	public bool details = true;
-	public bool names = true;
-	public bool progress = true;
-	public bool extra = true;
-	public bool stats = true;
-	public bool weapons = true;
-	public bool weaponUnlocks = true;
-	public bool weaponCategory = true;
-	public bool vehicles = true;
-	public bool vehicleCategory = true;
-	public bool vehicleUnlocks = true;	
-	public bool kititems = true;		
-	public bool awards = true;	
-	public bool dogtags = true;		
-	public bool assignments = true;		
-	public bool upcomingUnlocks = true;
-	public bool urls = true;
-	}*/
 
 	public static TupleFactory instance;
 	void Awake(){
@@ -92,6 +66,8 @@ public class TupleFactory : MonoBehaviour {
 
 		float time = pd.stats.timePlayed;
 		float kills = pd.stats.kills;
+		float rounds = pd.stats.numRounds;
+		float score = pd.player.score;
 		float rounding = 0.1f;
 		// EVERYTHING
 
@@ -102,8 +78,8 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("deaths",pd.stats.deaths/time,rounding);
 		t.setData("shotsFired",pd.stats.shotsFired/time,rounding);
 		t.setData("shotsHit",pd.stats.shotsHit/time,rounding);
-		t.setData("numLosses",pd.stats.numLosses/time,rounding);
-		t.setData("numWins",pd.stats.numWins/time,rounding);
+		t.setData("numLosses",pd.stats.numLosses/rounds,rounding);
+		t.setData("numWins",pd.stats.numWins/rounds,rounding);
 		t.setData("weaponKills",pd.stats.extra.weaponKills/kills,rounding);
 		t.setData("vehicleKills",pd.stats.extra.vehicleKills/kills,rounding);
 		t.setData("medals",pd.stats.extra.medals/time,rounding);
@@ -112,21 +88,21 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("avengerKills",pd.stats.avengerKills/kills,rounding);
 		t.setData("saviorKills",pd.stats.saviorKills/kills,rounding);
 		t.setData("nemesisKills",pd.stats.nemesisKills/kills,rounding);
-		t.setData("resupplies",pd.stats.resupplies/time,rounding);
-		t.setData("repairs",pd.stats.repairs/time,rounding);
-		t.setData("heals",pd.stats.heals/time,rounding);
-		t.setData("revives",pd.stats.revives/time,rounding);
-		t.setData("killAssists",pd.stats.killAssists/time,rounding);
+		t.setData("resupplies",pd.stats.resupplies/score,rounding);
+		t.setData("repairs",pd.stats.repairs/score,rounding);
+		t.setData("heals",pd.stats.heals/score,rounding);
+		t.setData("revives",pd.stats.revives/score,rounding);
+		t.setData("killAssists",pd.stats.killAssists/score,rounding);
 
-		t.setData("kdr",pd.stats.extra.kdr,rounding);
-		t.setData("wlr",pd.stats.extra.wlr,rounding);
-		t.setData("spm",pd.stats.extra.spm,rounding);
+		t.setData("kdr",pd.stats.extra.kdr,rounding); //clamp 5
+		t.setData("wlr",pd.stats.extra.wlr,rounding); //clamp 5
+		t.setData("spm",pd.stats.extra.spm,rounding); //clamp 2000
 		t.setData("gspm",pd.stats.extra.gspm,rounding);
 		t.setData("kpm",pd.stats.extra.kpm,rounding);
-		t.setData("sfpm",pd.stats.extra.sfpm,rounding);
-		t.setData("hkp",pd.stats.extra.hkp,rounding);
-		t.setData("khp",pd.stats.extra.khp,rounding);
-		t.setData("accuracy",pd.stats.extra.accuracy,rounding);
+		t.setData("sfpm",pd.stats.extra.sfpm,rounding); // clapm 100
+		t.setData("hkp",pd.stats.extra.hkp,rounding);  //claimp 30
+		t.setData("khp",pd.stats.extra.khp,rounding);  //clamp 30
+		t.setData("accuracy",pd.stats.extra.accuracy,rounding); //clamp 30
 
 
 		/*//----------------- attempt to extract best guns
@@ -144,7 +120,7 @@ public class TupleFactory : MonoBehaviour {
 
 
 		// BEHAVIOUR CLASSIFICATION
-
+			/*
 		t.setData ("Pilot", pd.stats.extra.vehKillsP, 0.2f);
 		t.setData ("Trooper", pd.stats.extra.weaKillsP, 0.2f);
 		t.setData ("Officer", pd.stats.extra.ribbons +
@@ -159,7 +135,7 @@ public class TupleFactory : MonoBehaviour {
 		          				pd.stats.saviorKills +
 		                         pd.stats.nemesisKills) / (float) pd.stats.kills, 0.2f);
 		t.setData ("Leader", pd.stats.flagCaptures + pd.stats.flagDefend, 0.2f);
-
+*/
 
 		// WEAPON SUGGESTION
 
@@ -216,10 +192,35 @@ public class TupleFactory : MonoBehaviour {
 		t = JsonConvert.DeserializeObject<List<Tuple>>(s);
 		tupleList = t;
 		print("Done loading file");
-
+		//DoPrint();
 		//Normalize.instance.StartNormailzation(t.ToArray());
 
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
+	}
+
+	void DoPrint(){
+		int index = tupleList[0].getIndexOfProperti("killAssists");
+		float max = -Mathf.Infinity;
+
+		float[] numZero = new float[tupleList[0].data.Count];
+
+		foreach(Tuple t in tupleList){
+			for(int i=0;i<numZero.Length;i++){
+				if(t.dataNormalized[i] == 0){
+					numZero[i]++;
+				}
+			}
+			//print(t.dataName[index]+"    "+t.data[index]+"    "+t.dataNormalized[index]);
+			if(t.data[index] > max){
+				max = t.data[index];
+			}
+		}
+
+		for(int i=0;i<numZero.Length;i++){
+			print(tupleList[0].dataName[i]+"   "+numZero[i]);
+		}
+
+		print("MAX for this value is "+max);
 	}
 
 	public void NormalizeTupleFile(){

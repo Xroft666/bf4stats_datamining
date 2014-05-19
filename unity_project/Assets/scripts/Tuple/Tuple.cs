@@ -21,6 +21,12 @@ public class Tuple{
 		})];
 	}
 
+	public int getIndexOfProperti(string name){
+		return dataName.FindIndex(delegate(string obj) {
+			return obj == name;
+		});
+	}
+
 	public void setData(string name, float data, float roundValue){
 		this.data.Add(data);
 		this.dataName.Add(name);
