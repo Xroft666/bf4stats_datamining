@@ -94,15 +94,15 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("revives",pd.stats.revives/score,rounding);			//0.0005
 		t.setData("killAssists",pd.stats.killAssists/score,rounding);
 
-		t.setData("kdr",pd.stats.extra.kdr,rounding); //clamp 5
-		t.setData("wlr",pd.stats.extra.wlr,rounding); //clamp 5
-		t.setData("spm",pd.stats.extra.spm,rounding); //clamp 2000
+		t.setData("kdr",Mathf.Clamp(pd.stats.extra.kdr,0f,5f),rounding); //clamp 5
+		t.setData("wlr",Mathf.Clamp(pd.stats.extra.wlr,0f,5f),rounding); //clamp 5
+		t.setData("spm",Mathf.Clamp(pd.stats.extra.spm,0f,2000f),rounding); //clamp 2000
 		t.setData("gspm",pd.stats.extra.gspm,rounding);
 		t.setData("kpm",pd.stats.extra.kpm,rounding);
-		t.setData("sfpm",pd.stats.extra.sfpm,rounding); // clapm 100
-		t.setData("hkp",pd.stats.extra.hkp,rounding);  //claimp 30
-		t.setData("khp",pd.stats.extra.khp,rounding);  //clamp 30
-		t.setData("accuracy",pd.stats.extra.accuracy,rounding); //clamp 30
+		t.setData("sfpm",Mathf.Clamp(pd.stats.extra.sfpm,0f,100f),rounding); // clapm 100
+		t.setData("hkp",Mathf.Clamp(pd.stats.extra.hkp,0f,30f),rounding);  //claimp 30
+		t.setData("khp",Mathf.Clamp(pd.stats.extra.khp,0f,30),rounding);  //clamp 30
+		t.setData("accuracy",Mathf.Clamp(pd.stats.extra.accuracy,0f,30f),rounding); //clamp 30
 
 
 		/*//----------------- attempt to extract best guns
