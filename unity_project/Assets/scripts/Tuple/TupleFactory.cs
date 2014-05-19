@@ -72,6 +72,7 @@ public class TupleFactory : MonoBehaviour {
 		// EVERYTHING
 
 		//-------------General perfomance stats in a ratio based on time
+		//------------Used for apriori
 		t.setData("timePlayed",pd.stats.timePlayed,rounding);
 		t.setData("score",pd.player.score/time,rounding);
 		t.setData("kills",pd.stats.kills/time,rounding);
@@ -87,11 +88,11 @@ public class TupleFactory : MonoBehaviour {
 		t.setData("suppressionAssists",pd.stats.suppressionAssists/time,rounding);
 		t.setData("avengerKills",pd.stats.avengerKills/kills,rounding);
 		t.setData("saviorKills",pd.stats.saviorKills/kills,rounding);
-		t.setData("nemesisKills",pd.stats.nemesisKills/kills,rounding);	//0.1
-		t.setData("resupplies",pd.stats.resupplies/score,rounding);		//0.002
-		t.setData("repairs",pd.stats.repairs/score,rounding);			//0.0005
-		t.setData("heals",pd.stats.heals/score,rounding);				//0.005
-		t.setData("revives",pd.stats.revives/score,rounding);			//0.0005
+		t.setData("nemesisKills",Mathf.Clamp(pd.stats.nemesisKills/kills,0,0.1f),rounding);	//0.1
+		t.setData("resupplies",Mathf.Clamp(pd.stats.resupplies/score,0,0.002f),rounding);		//0.002
+		t.setData("repairs",Mathf.Clamp(pd.stats.repairs/score,0,0.0005f),rounding);			//0.0005
+		t.setData("heals",Mathf.Clamp(pd.stats.heals/score,0,0.005f),rounding);				//0.005
+		t.setData("revives",Mathf.Clamp(pd.stats.revives/score,0,0.0005f),rounding);			//0.0005
 		t.setData("killAssists",pd.stats.killAssists/score,rounding);
 
 		t.setData("kdr",Mathf.Clamp(pd.stats.extra.kdr,0f,5f),rounding); //clamp 5
@@ -192,7 +193,7 @@ public class TupleFactory : MonoBehaviour {
 		t = JsonConvert.DeserializeObject<List<Tuple>>(s);
 		tupleList = t;
 		print("Done loading file");
-		DoPrint();
+		//DoPrint();
 		//Normalize.instance.StartNormailzation(t.ToArray());
 
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
@@ -210,17 +211,17 @@ public class TupleFactory : MonoBehaviour {
 					numZero[i]++;
 				}
 			}
-			print(t.dataName[index]+"    "+t.data[index]+"    "+t.dataNormalized[index]);
+			//print(t.dataName[index]+"    "+t.data[index]+"    "+t.dataNormalized[index]);
 			if(t.data[index] > max){
 				max = t.data[index];
 			}
 		}
 
 		for(int i=0;i<numZero.Length;i++){
-			//print(tupleList[0].dataName[i]+"   "+numZero[i]);
+			print(tupleList[0].dataName[i]+"   "+numZero[i]);
 		}
 
-		print("MAX for this value is "+max);
+		//print("MAX for this value is "+max);
 	}
 
 	public void NormalizeTupleFile(){
