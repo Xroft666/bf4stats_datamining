@@ -10,7 +10,7 @@ public class Normalize : MonoBehaviour {
 	public float newMin,newMax;
 
 	//int = column ID, float holds min and max
-	Dictionary<int,float[]> normalizeData = new Dictionary<int, float[]>();
+	//Dictionary<int,float[]> normalizeData = new Dictionary<int, float[]>();
 
 	public static Normalize instance;
 	void Awake(){
@@ -40,20 +40,60 @@ public class Normalize : MonoBehaviour {
 			}
 		}
 
-		foreach(Tuple tu in t){
-			normalizeTuple(tu);
+		
+		// z-score normalization
+		List<float> dataColumn = new List<float>();
+		for(int x=0; x<t[0].data.Count; x++)
+		{
+			// convert to columns
+			dataColumn.Clear();
+			for(int y=0; y<t.Length; y++)
+			{
+				dataColumn.Add(t[y].data[x]);
+			}
+			// normalize
+			dataColumn = ZScoreNormalize(dataColumn);
+
+			// reconvert to rows
+			for(int y=0; y<t.Length; y++)
+			{
+				t[y].dataNormalized[x] = dataColumn[y];
+			}
 		}
+
+		// minmax normalization
+		foreach(Tuple tu in t){
+			MinMaxNormalize(tu);
+		}
+
 		print("Done normalizing");
 	}
 
-	private void normalizeTuple(Tuple t){
-		t.dataNormalized = new List<float>();
+	private void MinMaxNormalize(Tuple t){
+		//t.dataNormalized = new List<float>();
+		List<float> newDataNormalized = new List<float>();
 		for(int i=0;i<t.data.Count;i++){
 			float value = (((t.data[i]-min[i])/(max[i]-min[i]))*(newMax-newMin)+newMin);
 			value = Mathf.Clamp(value,newMin,newMax);
 			value = Mathf.Floor(value * (1/t.roundValue[i])) / (1/t.roundValue[i]);
-			t.dataNormalized.Add(value);
+			newDataNormalized.Add(value);
 		}
+		t.dataNormalized = newDataNormalized;
+	}
+
+	private List<float> ZScoreNormalize(List<float> t)
+	{
+		List<float> ret = t;
+
+		float mean = MathHelper.Mean(ret);
+		float standardDeviation = MathHelper.StandardDeviation(ret);
+
+		for(int i=0; i<ret.Count; i++)
+		{
+			ret[i] = (ret[i] - mean) / standardDeviation;
+		}
+
+		return ret;
 	}
 
 	public void FactorizeTuples(Tuple[] t)
