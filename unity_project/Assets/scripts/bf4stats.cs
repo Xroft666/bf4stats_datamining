@@ -54,7 +54,8 @@ public class bf4stats : MonoBehaviour
 	private string output = "";
 
 	private int numPlayersDownloaded = 0;
-	
+
+	public List<APrioriRes> aPrioriResults = new List<APrioriRes>();
 
 	public string filepath = @"C:\MyApp\MySubDir\Data";
 

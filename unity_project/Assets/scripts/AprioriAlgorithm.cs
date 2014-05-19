@@ -15,6 +15,10 @@ public class Apriori
 
 	public static IEnumerator apriori( Tuple[] transactions, int supportThreshold ) 
 	{
+		bf4stats.instance.aPrioriResults.Clear();
+
+		if(File.Exists(Application.dataPath + "/Logs/log.txt"))
+			File.Delete(Application.dataPath + "/Logs/log.txt");
 		FileStream debugStream = File.Open(Application.dataPath + "/Logs/log.txt", FileMode.CreateNew);
 		writer = new StreamWriter(debugStream);
 		writer.WriteLine("starting aPriori at " + System.DateTime.Now);
@@ -43,9 +47,17 @@ public class Apriori
 
 			foreach(ItemSet i in frequentItemSets.Keys)
 			{
-				string s = Normalize.instance.PrintUnfactorizedData(i.set);
-				Debug.Log(s);
-				writer.WriteLine(s);
+				APrioriRes res = new APrioriRes();
+				for(int j = 0; j<i.set.Length; j++)
+				{
+					int idx = (int)System.Math.Truncate(i.set[j]);
+					i.set[j] = i.set[j]-idx;
+					res.resColumn.Add(new APrioriRes.APrioriResItem(TupleFactory.instance.tupleList[0].dataName[idx], i.set[j]));
+				}
+				bf4stats.instance.aPrioriResults.Add(res);
+				//string s = Normalize.instance.PrintUnfactorizedData(i.set);
+				Debug.Log(res.ToString());
+				writer.WriteLine(res.ToString());
 			}
 
 			SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
