@@ -43,7 +43,7 @@ public class CreateLearningData : MonoBehaviour {
 			string line = "";
 			line += tupleList[i].playerID.ToString();
 			for(int j=0;j<tupleList[i].data.Count;j++){
-				line += "\t" + tupleList[i].data[j].ToString(); 
+				line += "\t" + tupleList[i].dataNormalized[j].ToString(); 
 			}
 			line += "\n";
 			File.AppendAllText(Application.dataPath + "/Data/LearningData/"+outputFileName+".lrn", line);

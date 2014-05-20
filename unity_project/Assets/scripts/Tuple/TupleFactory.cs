@@ -64,12 +64,16 @@ public class TupleFactory : MonoBehaviour {
 
 		t.playerID = int.Parse(pd.player.id);
 
+
 		float time = pd.stats.timePlayed;
 		float kills = pd.stats.kills;
 		float rounds = pd.stats.numRounds;
 		float score = pd.player.score;
-		float rounding = 0.1f;
+		float rounding = 0.2f;
 		// EVERYTHING
+
+		t.favWeapon = pd.weapons.OrderByDescending(element => element.stat.kills).First().name;
+		//t.setData(pd.weapons[0].name.ToString(),pd.weapons[0].stat.kills,rounding);
 
 		//-------------General perfomance stats in a ratio based on time
 		//------------Used for apriori

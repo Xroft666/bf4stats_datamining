@@ -5,6 +5,8 @@ using System.Collections.Generic;
 [System.Serializable]
 public class Tuple{
 	public int playerID;
+	public int clusterID = -1;
+	public string favWeapon;
 	public List<float> data = new List<float>();
 	public List<string> dataName = new List<string>();
 	public List<float> dataNormalized = new List<float>();
