@@ -50,8 +50,9 @@ public class bf4stats : MonoBehaviour
 
 	private Vector2 namesScrollView;
 	private Vector2 playerInfoScrollView;
-	
-	private string output = "";
+
+	[HideInInspector]
+	public string output = "";
 
 	private int numPlayersDownloaded = 0;
 	
@@ -201,7 +202,7 @@ public class bf4stats : MonoBehaviour
 			yield return null;
 	}
 
-	IEnumerator RetrivePlayerInfo(string name)
+	public IEnumerator RetrivePlayerInfo(string name)
 	{
 		string outputFormat = "&output=js";
 
@@ -264,10 +265,6 @@ public class bf4stats : MonoBehaviour
 					downloadCounter++;
 				}
 			}
-
-
-
-
 		}
 	}
 

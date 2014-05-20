@@ -60,7 +60,7 @@ public class TupleFactory : MonoBehaviour {
 		
 	}
 
-	void FillTuple(Tuple t,PlayerData pd){
+	public void FillTuple(Tuple t,PlayerData pd){
 
 		t.playerID = int.Parse(pd.player.id);
 

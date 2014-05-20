@@ -1,0 +1,7 @@
+Cluster	Weapon
+1	ACE 23
+2	MG4
+3	ACE 23
+4	ACE 23
+5	AK 5C
+6	ACE 23

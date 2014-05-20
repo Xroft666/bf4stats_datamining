@@ -48,6 +48,8 @@ public class ESOMReaderWriter {
 
 	static public void ReadClusterFile(string tuplesFileName, string esomFileName)
 	{
+		Debug.Log("started reading cluster file " + esomFileName);
+
 		string filePath = Application.dataPath + "/Data/ESOMResult/" + esomFileName + ".cls";
 		string tuplesPath = Application.dataPath + "/Data/Tuples/" + tuplesFileName + ".txt";
 
@@ -71,6 +73,8 @@ public class ESOMReaderWriter {
 					tuples[j].clusterID = playerCluster;
 		}
 
+		Debug.Log("Cluster numbers are now inserted into tuples " + tuplesFileName);
+
 		// ignoring 0 cluster
 		tuples = (from x in tuples where x.clusterID != 0 select x).ToList();
 
@@ -80,15 +84,19 @@ public class ESOMReaderWriter {
 		// sorting by claster
 		tuples = tuples.OrderBy (element => element.clusterID).ToList();
 
+		Debug.Log("Cluster file " + tuplesFileName + " is being cleaned and sorted");
 
-		// serialization new cleaned tuples into another file
+		// serialization of new cleaned tuples into another file
 		string cleanedTuplesJson = JsonConvert.SerializeObject(tuples);
 		File.AppendAllText(Application.dataPath + "/Data/Tuples/" + tuplesFileName + "_cleaned.txt", cleanedTuplesJson);
 
+		Debug.Log("New tuples file " + tuplesFileName + "_cleaned.txt has been created");
 
 		// searching for the average weapon in the cluster
 		Dictionary<int, string> weaponsClusterMap = new Dictionary<int, string> ();
 		Dictionary<string, int> weaponsCounter = new Dictionary<string, int>();
+
+		Debug.Log("Searching for the best weapon...");
 
 		int clusterIndex = 0;
 		for( int i = 0; i < tuples.Count; i++ )
@@ -116,14 +124,18 @@ public class ESOMReaderWriter {
 			weaponsCounter.Clear();
 		}
 
+		Debug.Log("Searching is completed. Writing...");
+
 		// At this point weaponsClusterMap will have the most used guns of each clusters
 		// storing the result into a file
 
-		File.AppendAllText(Application.dataPath + "/Data/ClusteringResult/"+esomFileName+"_weaponSuggestion.txt", "Cluster\tWeapon");
+		File.AppendAllText(Application.dataPath + "/Data/ClusteringResult/"+esomFileName+"_weaponSuggestion.txt", "Cluster\tWeapon\n");
 		foreach( KeyValuePair<int, string> clusterWeapon in weaponsClusterMap )
 		{
 			string line = clusterWeapon.Key + "\t" + clusterWeapon.Value + "\n";
 			File.AppendAllText(Application.dataPath + "/Data/ClusteringResult/"+esomFileName+"_weaponSuggestion.txt", line);
 		}
+
+		Debug.Log("Clustering result has been written into " + esomFileName+"_weaponSuggestion.txt");
 	}
 }

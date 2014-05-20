@@ -32,7 +32,7 @@ public class WeaponSuggestionSystem
 		cleanTuples = JsonConvert.DeserializeObject<List<Tuple>>(tuples);	
 	}
 
-	static public string SuggestWeaponTo( Tuple newPlayer, int K )
+	static public string SuggestClusterTo( Tuple newPlayer, int K )
 	{
 		if( weaponsClusterMap == null || cleanTuples == null)
 		{
@@ -111,18 +111,21 @@ public class WeaponSuggestionSystem
 		}).Take( K ).ToArray();
 
 
-		Dictionary<string, int> weaponsCounter = new Dictionary<string, int>();
+		Dictionary<int, int> clustersCounter = new Dictionary<int, int>();
 		for( int i = 0; i < closestNeibhours.Length; i++ )
 		{
-			if( !weaponsCounter.ContainsKey(closestNeibhours[i].favWeapon) )
-				weaponsCounter[closestNeibhours[i].favWeapon] = 0;
+			if( !clustersCounter.ContainsKey(closestNeibhours[i].clusterID) )
+				clustersCounter[closestNeibhours[i].clusterID] = 0;
 			
-			weaponsCounter[closestNeibhours[i].favWeapon]++;
+			clustersCounter[closestNeibhours[i].clusterID]++;
 		}
-
-		if( weaponsCounter.Count > 0 )
+		
+		if( clustersCounter.Count > 0 )
 		{
-			return weaponsCounter.OrderBy( t => t.Value ).First().Key;
+			int resultCluster = clustersCounter.OrderBy( t => t.Value ).First().Key;
+			newPlayer.clusterID = resultCluster;
+
+			return weaponsClusterMap[resultCluster];
 		}
 		else
 		{
