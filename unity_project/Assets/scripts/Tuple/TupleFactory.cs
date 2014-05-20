@@ -72,7 +72,12 @@ public class TupleFactory : MonoBehaviour {
 		float rounding = 0.2f;
 		// EVERYTHING
 
-		t.favWeapon = pd.weapons.OrderByDescending(element => element.stat.kills).First().name;
+		if(pd.weapons != null && pd.weapons.Length > 0){
+			t.favWeapon = pd.weapons.OrderByDescending(element => element.stat.kills).First().name;
+		}else{
+			t.favWeapon = "Undefined";
+			Debug.LogWarning("No fav weapon found for player "+pd.player.name);
+		}
 		//t.setData(pd.weapons[0].name.ToString(),pd.weapons[0].stat.kills,rounding);
 
 		//-------------General perfomance stats in a ratio based on time
