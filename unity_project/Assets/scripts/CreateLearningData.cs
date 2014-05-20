@@ -77,22 +77,22 @@ public class CreateLearningData : MonoBehaviour {
 
 			for( int j = 0; j < tuples.Count; j++ )
 				if( tuples[j].playerID == playerId )
-					tuples[j].playerCluster = playerCluster;
+					tuples[j].clusterID = playerCluster;
 		}
 
 		// sorting by claster
-		tuples = tuples.OrderBy (element => element.playerCluster);
+		tuples = tuples.OrderBy (element => element.clusterID).ToList();
 
 		// searching for the average weapon in the cluster
 		Dictionary<int, string> weaponsClusterMap = new Dictionary<int, string> ();
 
-		int clusterIndex = tuples[0].playerCluster;
+		int clusterIndex = tuples[0].clusterID;
 		for( int i = 0; i < tuples.Count; i++ )
 		{
 			Dictionary<string, int> weaponsCounter = new Dictionary<string, int>();
 
-			bool hasChanged = clusterIndex != tuples[i].playerCluster;
-			clusterIndex = tuples[i].playerCluster;
+			bool hasChanged = clusterIndex != tuples[i].clusterID;
+			clusterIndex = tuples[i].clusterID;
 
 			if( !weaponsCounter.ContainsKey(tuples[i].favWeapon) )
 				weaponsCounter[tuples[i].favWeapon] = 0;
