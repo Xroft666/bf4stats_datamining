@@ -6,18 +6,9 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Linq;
 
-public class CreateLearningData : MonoBehaviour {
+public class ESOMReaderWriter {
 
-	//public TextAsset dataFile;
-	public string outputFileName;
-
-	public static CreateLearningData instance;
-	void Awake(){
-		instance = this;
-		Application.targetFrameRate = 0;
-	}
-
-	public IEnumerator LearnDataFromTuples(List<Tuple> tupleList){
+	static public void LearnDataFromTuples(List<Tuple> tupleList, string outputFileName){
 		if(File.Exists(Application.dataPath + "/Data/LearningData/"+outputFileName+".lrn")){
 			File.Delete(Application.dataPath + "/Data/LearningData/"+outputFileName+".lrn");
 		}
@@ -49,8 +40,8 @@ public class CreateLearningData : MonoBehaviour {
 			File.AppendAllText(Application.dataPath + "/Data/LearningData/"+outputFileName+".lrn", line);
 			//print("progress: "+i+"/"+tupleList.Count);
 		}
-		yield return new WaitForEndOfFrame();
-		print("Done creating learning data");
+
+		Debug.Log("Done creating learning data");
 		SoundReference.instance.PlaySound(SoundReference.instance.Done);
 
 	}

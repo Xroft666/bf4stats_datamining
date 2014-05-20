@@ -36,7 +36,7 @@ public class Interface : MonoBehaviour {
 		
 		if(TupleFactory.instance.tupleList.Count > 0){
 			if(GUI.Button(new Rect(500,100,250,50),"Create learn data from tuples")){
-				StartCoroutine(CreateLearningData.instance.LearnDataFromTuples(TupleFactory.instance.tupleList));
+				ESOMReaderWriter.LearnDataFromTuples(TupleFactory.instance.tupleList, "BestPlayers");
 			}
 		}
 	}
