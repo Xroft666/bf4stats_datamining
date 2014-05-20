@@ -105,8 +105,6 @@ public class Apriori
      */
 	private static ItemSet joinSets( ItemSet first, ItemSet second ) 
 	{
-		writer.WriteLine("try to join sets " + first.ToString() + ", " + second.ToString());
-
 		ItemSet ret = null;
 		
 		if(first.set.Length != second.set.Length)
@@ -126,7 +124,9 @@ public class Apriori
 		ret = new ItemSet(new float[first.set.Length+1]);
 		for(int i=0; i<first.set.Length; i++)
 			ret.set[i] = first.set[i];
-		ret.set[first.set.Length] = second.set[second.set.Length-1];        
+		ret.set[first.set.Length] = second.set[second.set.Length-1];   
+
+		//writer.WriteLine("try to join sets " + first.ToString() + ", " + second.ToString());
 		
 		return ret;
 	}

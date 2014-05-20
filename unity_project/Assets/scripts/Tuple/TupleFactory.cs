@@ -82,18 +82,13 @@ public class TupleFactory : MonoBehaviour {
 
 		//-------------General perfomance stats in a ratio based on time
 		//------------Used for apriori
-		t.setData("timePlayed",pd.stats.timePlayed,rounding);
-		t.setData("score",pd.player.score/time,rounding);
-		t.setData("kills",pd.stats.kills/time,rounding);
 		t.setData("deaths",pd.stats.deaths/time,rounding);
-		t.setData("shotsFired",pd.stats.shotsFired/time,rounding);
 		t.setData("shotsHit",pd.stats.shotsHit/time,rounding);
 		t.setData("numLosses",pd.stats.numLosses/rounds,rounding);
 		t.setData("numWins",pd.stats.numWins/rounds,rounding);
 		t.setData("weaponKills",pd.stats.extra.weaponKills/kills,rounding);
 		t.setData("vehicleKills",pd.stats.extra.vehicleKills/kills,rounding);  
 		t.setData("medals",pd.stats.extra.medals/time,rounding);
-		t.setData("headshots",pd.stats.headshots/kills,rounding);
 		t.setData("suppressionAssists",pd.stats.suppressionAssists/time,rounding);
 		t.setData("avengerKills",pd.stats.avengerKills/kills,rounding);
 		t.setData("saviorKills",pd.stats.saviorKills/kills,rounding);
