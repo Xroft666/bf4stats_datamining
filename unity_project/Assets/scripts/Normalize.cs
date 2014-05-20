@@ -122,7 +122,7 @@ public class Normalize : MonoBehaviour {
 		}
 	}
 
-	public void UnFactorizeTuple(Tuple t)
+	private void UnFactorizeTuple(Tuple t)
 	{
 		for(int i=1; i<t.dataNormalized.Count; i++)
 		{
