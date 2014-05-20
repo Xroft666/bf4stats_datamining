@@ -74,8 +74,17 @@ public class ESOMReaderWriter {
 		// ignoring 0 cluster
 		tuples = (from x in tuples where x.clusterID != 0 select x).ToList();
 
+		// ignoring "Undefined" weapon
+		tuples = (from x in tuples where x.favWeapon != "Undefined" select x).ToList();
+
 		// sorting by claster
 		tuples = tuples.OrderBy (element => element.clusterID).ToList();
+
+
+		// serialization new cleaned tuples into another file
+		string cleanedTuplesJson = JsonConvert.SerializeObject(tuples);
+		File.AppendAllText(Application.dataPath + "/Data/Tuples/" + tuplesFileName + "_cleaned.txt", cleanedTuplesJson);
+
 
 		// searching for the average weapon in the cluster
 		Dictionary<int, string> weaponsClusterMap = new Dictionary<int, string> ();
@@ -84,9 +93,6 @@ public class ESOMReaderWriter {
 		int clusterIndex = 0;
 		for( int i = 0; i < tuples.Count; i++ )
 		{
-			if( tuples[i].favWeapon == "Undefined")
-				continue;
-
 			if( clusterIndex != tuples[i].clusterID )
 			{
 				if( weaponsCounter.Count > 0 )
