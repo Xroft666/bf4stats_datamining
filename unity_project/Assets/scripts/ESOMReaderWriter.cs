@@ -71,30 +71,43 @@ public class ESOMReaderWriter {
 					tuples[j].clusterID = playerCluster;
 		}
 
+		// ignoring 0 cluster
+		tuples = (from x in tuples where x.clusterID != 0 select x).ToList();
+
 		// sorting by claster
 		tuples = tuples.OrderBy (element => element.clusterID).ToList();
 
 		// searching for the average weapon in the cluster
 		Dictionary<int, string> weaponsClusterMap = new Dictionary<int, string> ();
+		Dictionary<string, int> weaponsCounter = new Dictionary<string, int>();
 
-		int clusterIndex = tuples[0].clusterID;
+		int clusterIndex = 0;
 		for( int i = 0; i < tuples.Count; i++ )
 		{
-			Dictionary<string, int> weaponsCounter = new Dictionary<string, int>();
+			if( tuples[i].favWeapon == "Undefined")
+				continue;
 
-			bool hasChanged = clusterIndex != tuples[i].clusterID;
-			clusterIndex = tuples[i].clusterID;
+			if( clusterIndex != tuples[i].clusterID )
+			{
+				if( weaponsCounter.Count > 0 )
+				{
+					weaponsClusterMap[clusterIndex] = weaponsCounter.OrderByDescending( x => x.Value ).First().Key;		
+					weaponsCounter.Clear();
+				}
+				clusterIndex = tuples[i].clusterID;
+			}
 
 			if( !weaponsCounter.ContainsKey(tuples[i].favWeapon) )
 				weaponsCounter[tuples[i].favWeapon] = 0;
 
 			weaponsCounter[tuples[i].favWeapon]++;
+		}
 
-			if( hasChanged )
-			{
-				weaponsClusterMap[clusterIndex] = weaponsCounter.OrderByDescending( x => x.Value ).First().Key;
-				weaponsCounter.Clear();
-			}
+		// taking into consideration the last cluster
+		if( weaponsCounter.Count > 0 )
+		{
+			weaponsClusterMap[clusterIndex] = weaponsCounter.OrderByDescending( x => x.Value ).First().Key;
+			weaponsCounter.Clear();
 		}
 
 		// At this point weaponsClusterMap will have the most used guns of each clusters
