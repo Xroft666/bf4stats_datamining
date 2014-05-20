@@ -111,5 +111,13 @@ public class ESOMReaderWriter {
 		}
 
 		// At this point weaponsClusterMap will have the most used guns of each clusters
+		// storing the result into a file
+
+		File.AppendAllText(Application.dataPath + "/Data/ClusteringResult/"+esomFileName+"_weaponSuggestion.txt", "Cluster\tWeapon");
+		foreach( KeyValuePair<int, string> clusterWeapon in weaponsClusterMap )
+		{
+			string line = clusterWeapon.Key + "\t" + clusterWeapon.Value + "\n";
+			File.AppendAllText(Application.dataPath + "/Data/ClusteringResult/"+esomFileName+"_weaponSuggestion.txt", line);
+		}
 	}
 }
