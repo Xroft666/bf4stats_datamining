@@ -1,10 +1,2 @@
-starting aPriori at 5/19/2014 8:28:07 PM
-level 1 done at 5/19/2014 8:28:09 PM
-Finding frequent itemsets of length 2… at 5/19/2014 8:28:09 PM
- found 4
- | headshots: 0.1000004 | gspm: 0 |
- | gspm: 0 | headshots: 0.1000004 |
- | gspm: 0 | shotsFired: 0.0999999 |
- | shotsFired: 0.0999999 | gspm: 0 |
-Finding frequent itemsets of length 3… at 5/19/2014 8:28:10 PM
- found 0
+starting aPriori...
+level 1 done

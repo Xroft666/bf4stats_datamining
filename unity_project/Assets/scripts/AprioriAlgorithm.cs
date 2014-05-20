@@ -2,7 +2,6 @@
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 /**
  * performs the a-Priori algorithm on the transactions dataset with a given minimum supportThreshold.
@@ -16,10 +15,6 @@ public class Apriori
 
 	public static IEnumerator apriori( Tuple[] transactions, int supportThreshold ) 
 	{
-		bf4stats.instance.aPrioriResults.Clear();
-
-		if(File.Exists(Application.dataPath + "/Logs/log.txt"))
-			File.Delete(Application.dataPath + "/Logs/log.txt");
 		FileStream debugStream = File.Open(Application.dataPath + "/Logs/log.txt", FileMode.CreateNew);
 		writer = new StreamWriter(debugStream);
 		writer.WriteLine("starting aPriori at " + System.DateTime.Now);
@@ -48,17 +43,9 @@ public class Apriori
 
 			foreach(ItemSet i in frequentItemSets.Keys)
 			{
-				APrioriRes res = new APrioriRes();
-				for(int j = 0; j<i.set.Length; j++)
-				{
-					int idx = (int)System.Math.Truncate(i.set[j]);
-					i.set[j] = i.set[j]-idx;
-					res.resColumn.Add(new APrioriRes.APrioriResItem(TupleFactory.instance.tupleList[0].dataName[idx], i.set[j]));
-				}
-				bf4stats.instance.aPrioriResults.Add(res);
-				//string s = Normalize.instance.PrintUnfactorizedData(i.set);
-				Debug.Log(res.ToString());
-				writer.WriteLine(res.ToString());
+				string s = Normalize.instance.PrintUnfactorizedData(i.set);
+				Debug.Log(s);
+				writer.WriteLine(s);
 			}
 
 			SoundReference.instance.PlaySound(SoundReference.instance.BigProgress);
@@ -68,9 +55,6 @@ public class Apriori
 		lastRunSet = ret;
 
 		writer.Close();
-		string toWrite = JsonConvert.SerializeObject(bf4stats.instance.aPrioriResults);
-	    Directory.CreateDirectory(Application.dataPath+"/Data/LogAsJson/");
-		File.WriteAllText(Application.dataPath+"/Data/LogAsJson/"+"aprioriResult"+".txt",toWrite);
 	}
 	
 	/**
@@ -121,7 +105,7 @@ public class Apriori
      */
 	private static ItemSet joinSets( ItemSet first, ItemSet second ) 
 	{
-		//writer.WriteLine("try to join sets " + first.ToString() + ", " + second.ToString());
+		writer.WriteLine("try to join sets " + first.ToString() + ", " + second.ToString());
 
 		ItemSet ret = null;
 		
