@@ -68,7 +68,7 @@ public class TupleFactory : MonoBehaviour {
 		float kills = pd.stats.kills;
 		float rounds = pd.stats.numRounds;
 		float score = pd.player.score;
-		float rounding = 0.1f;
+		float rounding = 0.2f;
 		// EVERYTHING
 
 		//-------------General perfomance stats in a ratio based on time
